@@ -56,16 +56,6 @@ public class HomeView {
         topHBox.getChildren().add(topLogoImageView);
         topHBox.setStyle("-fx-background-color: #000000");
 
-        // Left VBox containing Menu options
-        /*
-        button.graphicProperty().bind(
-                Bindings.when(
-                                button.hoverProperty()
-                        )
-                        .then(meatView)
-                        .otherwise(lambView)
-        );
-        */
         Label orderLabel = new Label("Order");
         orderLabel.setPadding(new Insets(-10,0,0,0));
         orderLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -82,12 +72,87 @@ public class HomeView {
             orderImageView.setImage(orderMouseOverImage);
             orderLabel.setStyle("-fx-text-fill: #DC77FA");
             // implement code to change mouse cursor to finger
+            orderVBox.setStyle("-fx-cursor: hand");
+
         });
         orderVBox.setOnMouseExited(event -> {
             orderImageView.setImage(orderImage);
             orderLabel.setStyle("-fx-text-fill: #AAAAAA");
-            // implement code to change mouse cursor back to normal
         });
+
+        Label filmLabel = new Label("Movies");
+        filmLabel.setPadding(new Insets(-10,0,0,0));
+        filmLabel.setStyle("-fx-text-fill: #AAAAAA");
+        Image filmImage = new Image("/appGraphics/movies.png");
+        Image filmMouseOverImage = new Image("/appGraphics/movies-mouseover.png");
+        Image filmSelectedImage = new Image("/appGraphics/movies-selected.png");
+        ImageView filmImageView = new ImageView(filmImage);
+        filmImageView.setScaleX(0.5);
+        filmImageView.setScaleY(0.5);
+        VBox filmVBox = new VBox();
+        filmVBox.setAlignment(Pos.CENTER);
+        filmVBox.getChildren().addAll(filmImageView,filmLabel);
+        filmVBox.setOnMouseEntered(event -> {
+            filmImageView.setImage(filmMouseOverImage);
+            filmLabel.setStyle("-fx-text-fill: #DC77FA");
+            // implement code to change mouse cursor to finger
+            filmVBox.setStyle("-fx-cursor: hand");
+
+        });
+        filmVBox.setOnMouseExited(event -> {
+            filmImageView.setImage(filmImage);
+            filmLabel.setStyle("-fx-text-fill: #AAAAAA");
+        });
+
+        Label customerLabel = new Label("Customer");
+        customerLabel.setPadding(new Insets(-10,0,0,0));
+        customerLabel.setStyle("-fx-text-fill: #AAAAAA");
+        Image customerImage = new Image("/appGraphics/customer.png");
+        Image customerMouseOverImage = new Image("/appGraphics/customer-mouseover.png");
+        Image customerSelectedImage = new Image("/appGraphics/customer-selected.png");
+        ImageView customerImageView = new ImageView(customerImage);
+        customerImageView.setScaleX(0.5);
+        customerImageView.setScaleY(0.5);
+        VBox customerVBox = new VBox();
+        customerVBox.setAlignment(Pos.CENTER);
+        customerVBox.getChildren().addAll(customerImageView,customerLabel);
+        customerVBox.setOnMouseEntered(event -> {
+            customerImageView.setImage(customerMouseOverImage);
+            customerLabel.setStyle("-fx-text-fill: #DC77FA");
+            // implement code to change mouse cursor to finger
+            customerVBox.setStyle("-fx-cursor: hand");
+
+        });
+        customerVBox.setOnMouseExited(event -> {
+            customerImageView.setImage(customerImage);
+            customerLabel.setStyle("-fx-text-fill: #AAAAAA");
+        });
+
+        Label staffLabel = new Label("Staff");
+        staffLabel.setPadding(new Insets(-10,0,0,0));
+        staffLabel.setStyle("-fx-text-fill: #AAAAAA");
+        Image staffImage = new Image("/appGraphics/staff.png");
+        Image staffMouseOverImage = new Image("/appGraphics/staff-mouseover.png");
+        Image staffSelectedImage = new Image("/appGraphics/staff-selected.png");
+        ImageView staffImageView = new ImageView(staffImage);
+        staffImageView.setScaleX(0.5);
+        staffImageView.setScaleY(0.5);
+        VBox staffVBox = new VBox();
+        staffVBox.setAlignment(Pos.CENTER);
+        staffVBox.getChildren().addAll(staffImageView,staffLabel);
+        staffVBox.setOnMouseEntered(event -> {
+            staffImageView.setImage(staffMouseOverImage);
+            staffLabel.setStyle("-fx-text-fill: #DC77FA");
+            // implement code to change mouse cursor to finger
+            staffVBox.setStyle("-fx-cursor: hand");
+
+        });
+        staffVBox.setOnMouseExited(event -> {
+            staffImageView.setImage(staffImage);
+            staffLabel.setStyle("-fx-text-fill: #AAAAAA");
+        });
+
+
 
         /*Button orderButton = new Button(orderLabel, orderImageView);
         orderButton.setScaleX(0.5);
@@ -103,7 +168,7 @@ public class HomeView {
         orderButton.setStyle("-fx-background-color: transparent");
         orderButton.setContentDisplay(ContentDisplay.TOP);*/
         VBox menuVBox = new VBox();
-        menuVBox.getChildren().add(orderVBox);
+        menuVBox.getChildren().addAll(orderVBox, filmVBox, customerVBox, staffVBox);
         menuVBox.setStyle("-fx-background-color: #000000");
         Pane contentPane = new Pane();
         HBox menuAndContentHBox = new HBox();
