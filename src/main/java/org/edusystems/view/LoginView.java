@@ -2,9 +2,11 @@ package org.edusystems.view;
 
 // Imports
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,37 +43,47 @@ public class LoginView {
      */
     public void present() {
         // First row in View is the image
-        Image loginViewImage = new Image("appGraphics/wigellsvideobodlogocats.png");
-        ImageView loginViewImageView = new ImageView(loginViewImage);
-
-        // Second row in View is userLabel & userTextfield presented in Hbox
-        Label userLabel = new Label("username:");
-        TextField userTextField = new TextField("username");
+        Image loginImage = new Image("appGraphics/wigellsvideobodlogocats.png");
+        ImageView loginImageView = new ImageView(loginImage);
+        HBox imageHBox = new HBox();
+        imageHBox.getChildren().add(loginImageView);
+        imageHBox.setAlignment(Pos.CENTER);
+        imageHBox.setPadding(new Insets(200,0,5,0));
+        // Second row in the View is the username input field
+        Label userLabel = new Label("username: ");
+        TextField userTextField = new TextField();
+        userTextField.setPromptText("username");
+        HBox userHBox = new HBox();
+        userHBox.getChildren().addAll(userLabel,userTextField);
+        userHBox.setAlignment(Pos.CENTER);
+        userHBox.setPadding(new Insets(5,0,0,0));
+        // Third row in the View is the password input field
+        Label passwordLabel = new Label("password: ");
+        TextField passwordTextField = new PasswordField();
+        passwordTextField.setPromptText("password");
+        HBox passwordHBox = new HBox();
+        passwordHBox.getChildren().addAll(passwordLabel,passwordTextField);
+        passwordHBox.setAlignment(Pos.CENTER);
+        passwordHBox.setPadding(new Insets(5,0,5,0));
+        // Fourth row in the View is the login button
+        Button loginButton = new Button("Login");
+        loginButton.setAlignment(Pos.CENTER);
+        // Fifth row is the company logo
+        Image edusystemsImage = new Image("appGraphics/edusystems.png");
+        ImageView edusystemsImageView = new ImageView(edusystemsImage);
+        edusystemsImageView.setScaleX(0.5);
+        edusystemsImageView.setScaleY(0.5);
+        HBox edusystemsHBox = new HBox();
+        edusystemsHBox.getChildren().add(edusystemsImageView);
+        edusystemsHBox.setAlignment(Pos.CENTER);
+        edusystemsHBox.setPadding(new Insets(150,0,5,0));
+        // VBox will contain the image, username/password input fields and login button
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(loginViewImageView, userTextField);
-
-        /*
-        // Make the button scale up/down as mouse enters/leaves the object
-        buttonStartServer.setOnMouseEntered(event -> {
-            buttonStartServer.setScaleX(0.55);
-            buttonStartServer.setScaleY(0.55);
-        });
-        buttonStartServer.setOnMouseExited(event -> {
-            buttonStartServer.setScaleX(0.5);
-            buttonStartServer.setScaleY(0.5);
-        });
-        buttonStartServer.setOnAction(event -> new GameController(primaryStage, true));
-        Button buttonStartClient = new Button("", new ImageView("clientstart.png"));
-        buttonStartClient.setStyle("-fx-background-color:transparent");
-        buttonStartClient.setScaleX(0.5);
-        buttonStartClient.setScaleY(0.5);
-        */
-        // Make the button scale up/down as mouse enters/leaves the object
-        // Create a StackPane to hold the VBox
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.getChildren().add(vBox);
+        vBox.getChildren().addAll(imageHBox, userHBox, passwordHBox, loginButton, edusystemsHBox);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setStyle("");
         // Make a new Scene containing the stackPane and set the size as the backgrounds size
-        Scene scene = new Scene(anchorPane, 1280, 768);
+        Scene scene = new Scene(vBox, 1280, 768);
         // Set this scene as the scene of primaryStage
         primaryStage.setScene(scene);
         // Show the stage
