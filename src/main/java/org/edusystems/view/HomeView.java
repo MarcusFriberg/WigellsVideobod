@@ -80,6 +80,10 @@ public class HomeView {
             orderLabel.setStyle("-fx-text-fill: #AAAAAA");
         });
 
+        orderVBox.setOnMouseClicked(event -> {
+            orderImageView.setImage((orderSelectedImage));
+        });
+
         Label filmLabel = new Label("Movies");
         filmLabel.setPadding(new Insets(-10,0,0,0));
         filmLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -102,6 +106,9 @@ public class HomeView {
         filmVBox.setOnMouseExited(event -> {
             filmImageView.setImage(filmImage);
             filmLabel.setStyle("-fx-text-fill: #AAAAAA");
+        });
+        filmVBox.setOnMouseClicked(event -> {
+            filmImageView.setImage((filmSelectedImage));
         });
 
         Label customerLabel = new Label("Customer");
@@ -127,6 +134,9 @@ public class HomeView {
             customerImageView.setImage(customerImage);
             customerLabel.setStyle("-fx-text-fill: #AAAAAA");
         });
+        customerVBox.setOnMouseClicked(event -> {
+            customerImageView.setImage((customerSelectedImage));
+        });
 
         Label staffLabel = new Label("Staff");
         staffLabel.setPadding(new Insets(-10,0,0,0));
@@ -150,6 +160,10 @@ public class HomeView {
         staffVBox.setOnMouseExited(event -> {
             staffImageView.setImage(staffImage);
             staffLabel.setStyle("-fx-text-fill: #AAAAAA");
+        });
+
+        staffVBox.setOnMouseClicked(event -> {
+            staffImageView.setImage((staffSelectedImage));
         });
 
 
