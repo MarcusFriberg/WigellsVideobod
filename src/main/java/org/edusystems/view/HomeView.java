@@ -20,12 +20,16 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /*
- * Class LoginView
- * A class to create a scene for the loginView of the application
- * where the user can login.
+ * Class HomeView
+ * A class to create a scene for the homeView of the application
+ * where the user can get an overview of the current state of the system.
  * @param: Constructor receives the primaryStage as a parameter.
  * @author: Marcus Friberg
  * @author: marcus.friberg@edu.edugrad.se
+ * @author: Matilda Wintence
+ * @author: matilda.wintence@edu.edugrad.se
+ * @author: Martin Andersson
+ * @author: martin.andersson@edu.edugrad.se
  * @version: 1.0
  */
 public class HomeView {
@@ -54,6 +58,7 @@ public class HomeView {
         ImageView topLogoImageView = new ImageView(topLogoImage);
         HBox topHBox = new HBox();
         topHBox.getChildren().add(topLogoImageView);
+        topHBox.setPrefHeight(100);
         topHBox.setStyle("-fx-background-color: #000000");
 
         Label orderLabel = new Label("Order");
@@ -73,17 +78,14 @@ public class HomeView {
             orderLabel.setStyle("-fx-text-fill: #DC77FA");
             // implement code to change mouse cursor to finger
             orderVBox.setStyle("-fx-cursor: hand");
-
         });
         orderVBox.setOnMouseExited(event -> {
             orderImageView.setImage(orderImage);
             orderLabel.setStyle("-fx-text-fill: #AAAAAA");
         });
-
         orderVBox.setOnMouseClicked(event -> {
             orderImageView.setImage((orderSelectedImage));
         });
-
         Label filmLabel = new Label("Movies");
         filmLabel.setPadding(new Insets(-10,0,0,0));
         filmLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -101,7 +103,6 @@ public class HomeView {
             filmLabel.setStyle("-fx-text-fill: #DC77FA");
             // implement code to change mouse cursor to finger
             filmVBox.setStyle("-fx-cursor: hand");
-
         });
         filmVBox.setOnMouseExited(event -> {
             filmImageView.setImage(filmImage);
@@ -110,7 +111,6 @@ public class HomeView {
         filmVBox.setOnMouseClicked(event -> {
             filmImageView.setImage((filmSelectedImage));
         });
-
         Label customerLabel = new Label("Customer");
         customerLabel.setPadding(new Insets(-10,0,0,0));
         customerLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -137,7 +137,6 @@ public class HomeView {
         customerVBox.setOnMouseClicked(event -> {
             customerImageView.setImage((customerSelectedImage));
         });
-
         Label staffLabel = new Label("Staff");
         staffLabel.setPadding(new Insets(-10,0,0,0));
         staffLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -155,50 +154,36 @@ public class HomeView {
             staffLabel.setStyle("-fx-text-fill: #DC77FA");
             // implement code to change mouse cursor to finger
             staffVBox.setStyle("-fx-cursor: hand");
-
         });
         staffVBox.setOnMouseExited(event -> {
             staffImageView.setImage(staffImage);
             staffLabel.setStyle("-fx-text-fill: #AAAAAA");
         });
-
         staffVBox.setOnMouseClicked(event -> {
             staffImageView.setImage((staffSelectedImage));
         });
-
-
-
-        /*Button orderButton = new Button(orderLabel, orderImageView);
-        orderButton.setScaleX(0.5);
-        orderButton.setScaleY(0.5);
-        orderButton.setTextAlignment(TextAlignment.CENTER);
-        orderButton.setStyle("-fx-font-size: 30");
-        orderButton.setStyle("-fx-text-fill: #AAAAAA");
-        orderButton.graphicProperty().bind(
-                Bindings.when(orderButton.hoverProperty())
-                        .then(orderMouseOverImageView)
-                        .otherwise(orderImageView)
-        );
-        orderButton.setStyle("-fx-background-color: transparent");
-        orderButton.setContentDisplay(ContentDisplay.TOP);*/
         VBox menuVBox = new VBox();
         menuVBox.getChildren().addAll(orderVBox, filmVBox, customerVBox, staffVBox);
         menuVBox.setStyle("-fx-background-color: #000000");
+        menuVBox.setPrefHeight(668);
+        /*
+        * The Pane - contentPain is where we add the unique content of each section.
+        * Add tables and buttons here to view and manipulate the data from the database.
+         */
         Pane contentPane = new Pane();
+        contentPane.setStyle("-fx-background-color: #333231");
+        contentPane.setMinWidth(1180);
+        contentPane.setMinHeight(668);
         HBox menuAndContentHBox = new HBox();
         menuAndContentHBox.getChildren().addAll(menuVBox, contentPane);
-
         VBox mainVBox = new VBox();
         mainVBox.getChildren().addAll(topHBox, menuAndContentHBox);
-
         // Make a new Scene containing the stackPane and set the size as the backgrounds size
         Scene scene = new Scene(mainVBox, 1280, 768);
         // Set this scene as the scene of primaryStage
         primaryStage.setScene(scene);
+        // Set the heigt of the meny VBOX to the primaryStage height minus the topHbar height
         // Show the stage
         primaryStage.show();
     }
 }
-
-
-
