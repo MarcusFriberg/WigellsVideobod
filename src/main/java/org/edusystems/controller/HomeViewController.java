@@ -1,5 +1,4 @@
 package org.edusystems.controller;
 
-public class LoginController {
-
+public class HomeViewController {
 }
