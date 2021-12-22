@@ -30,23 +30,25 @@ import javafx.stage.Stage;
  */
 public class HomeView {
     // Variables
-    private final Stage primaryStage;
-
 
     // Constructor
-    public HomeView(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public HomeView() {
+
     }
 
     /*
-     * Method present
-     * A method to present the startView.
-     * Creates the layout of the first view that appears when game is started.
-     * Presents the created scene to the primaryStage that was provided with
-     * the call to the constructor.
+     * Method getContent
+     * A method to return content of the HomeView to the caller.
      * @author: Marcus Friberg
      * @author: marcus.friberg@edu.edugrade.se
      * @version: 1.0
      */
+
+    public VBox getContent() {
+        VBox content = new VBox();
+        Label label = new Label("Homeview is here :)");
+        content.getChildren().add(label);
+        return content;
+    }
 
 }

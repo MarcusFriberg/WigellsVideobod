@@ -1,5 +1,6 @@
 package org.edusystems;
 
+import org.edusystems.controller.ViewController;
 import org.edusystems.view.HomeView;
 import org.edusystems.view.LoginView;
 import javafx.application.Application;
@@ -29,7 +30,6 @@ public class Main extends Application {
         // Create a new startView and provide it with the primaryStage and let it present itself
         //LoginView loginView = new LoginView(primaryStage);
         //loginView.present();
-        MainView mainView = new MainView(primaryStage);
-        mainView.present();
+        ViewController viewController = new ViewController(primaryStage);
     }
 }

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Slask {
+/*
+
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("hibernate");
     final ObservableList<CustomerCopy> data = FXCollections.observableArrayList();
 
@@ -603,5 +605,5 @@ public class Slask {
         } finally {
             entityManager.close();
         }
-    }
+    }*/
 }
