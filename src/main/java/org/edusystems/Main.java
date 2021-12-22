@@ -4,6 +4,7 @@ import org.edusystems.view.HomeView;
 import org.edusystems.view.LoginView;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.edusystems.view.MainView;
 
 public class Main extends Application {
 
@@ -28,7 +29,7 @@ public class Main extends Application {
         // Create a new startView and provide it with the primaryStage and let it present itself
         //LoginView loginView = new LoginView(primaryStage);
         //loginView.present();
-        HomeView homeView = new HomeView(primaryStage);
-        homeView.present();
+        MainView mainView = new MainView(primaryStage);
+        mainView.present();
     }
 }
