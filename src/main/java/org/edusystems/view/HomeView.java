@@ -1,19 +1,8 @@
 package org.edusystems.view;
 
 // Imports
-
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 
 /*
  * Class HomeView
@@ -29,7 +18,6 @@ import javafx.stage.Stage;
  * @version: 1.0
  */
 public class HomeView {
-    // Variables
 
     // Constructor
     public HomeView() {
@@ -43,10 +31,10 @@ public class HomeView {
      * @author: marcus.friberg@edu.edugrade.se
      * @version: 1.0
      */
-
     public VBox getContent() {
         VBox content = new VBox();
         Label label = new Label("Homeview is here :)");
+        label.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 18");
         content.getChildren().add(label);
         return content;
     }

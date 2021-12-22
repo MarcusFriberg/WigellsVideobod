@@ -1,11 +1,8 @@
 package org.edusystems;
-
+// Imports
 import org.edusystems.controller.ViewController;
-import org.edusystems.view.HomeView;
-import org.edusystems.view.LoginView;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.edusystems.view.MainView;
 
 public class Main extends Application {
 
@@ -26,7 +23,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Set the title of the window and create a StackPane
         primaryStage.setTitle("Wigells videobod");
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         // Create a new startView and provide it with the primaryStage and let it present itself
         //LoginView loginView = new LoginView(primaryStage);
         //loginView.present();

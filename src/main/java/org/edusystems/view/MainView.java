@@ -1,31 +1,32 @@
 package org.edusystems.view;
-
-import javafx.beans.Observable;
-import javafx.beans.value.ObservableStringValue;
-import javafx.collections.ObservableList;
+// Imports
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.edusystems.controller.ViewController;
 
 public class MainView {
     private Stage primaryStage;
     private FrameView frameView;
-    private CustomerView customerView;
     private HomeView homeView;
+    private OrderView orderView;
+    private MovieView movieView;
+    private CustomerView customerView;
+    private StaffView staffView;
+    ViewController viewController;
     VBox content;
 
-    public MainView(Stage primaryStage) {
+    public MainView(Stage primaryStage, ViewController viewController) {
         this.primaryStage = primaryStage;
-        frameView = new FrameView();
-        customerView = new CustomerView();
+        this.viewController = viewController;
+        frameView = new FrameView(viewController);
         homeView = new HomeView();
+        orderView = new OrderView();
+        movieView = new MovieView();
+        customerView = new CustomerView();
+        staffView = new StaffView();
+
         present("homeView");
     }
 
@@ -34,13 +35,22 @@ public class MainView {
             case "homeView" :
                 content = homeView.getContent();
                 break;
+            case "orderView" :
+                content = orderView.getContent();
+                break;
+            case "movieView" :
+                content = movieView.getContent();
+                break;
             case "customerView" :
                 content = customerView.getContent();
+                break;
+            case "staffView" :
+                content = staffView.getContent();
             default:
                 System.out.println("Call to none existing view");
         }
-        VBox mainVBox = frameView.getFrame(content);
-
+        content.setPadding(new Insets(50,50,50,50));
+        VBox mainVBox = frameView.getFrame(content, view);
         // Make a new Scene containing the stackPane and set the size as the backgrounds size
         Scene scene = new Scene(mainVBox, 1280, 768);
         // Set this scene as the scene of primaryStage
