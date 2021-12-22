@@ -3,11 +3,10 @@ package org.edusystems.view;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-
-public class CustomerView {
+public class MovieView {
 
     // Constructor
-    public CustomerView() {
+    public MovieView() {
 
     }
 
@@ -19,13 +18,10 @@ public class CustomerView {
      * @version: 1.0
      */
     public VBox getContent() {
-        VBox content = new VBox(); // Must remain
-        Label label = new Label("Customer management");
+        VBox content = new VBox();
+        Label label = new Label("MovieView is here :)");
         label.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 18");
-
-        content.getChildren().add(label); // Replace label with real content
+        content.getChildren().add(label);
         return content;
     }
-
-
 }

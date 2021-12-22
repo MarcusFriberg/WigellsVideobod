@@ -1,5 +1,5 @@
 package org.edusystems.view;
-
+// Imports
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,14 +8,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.edusystems.controller.ViewController;
 
 public class FrameView {
+    ViewController viewController;
 
-    public FrameView() {
-
+    // Constructor
+    public FrameView(ViewController viewController) {
+        this.viewController = viewController;
     }
 
-    public VBox getFrame(VBox content) {
+    public VBox getFrame(VBox content, String selectedView) {
         // Top HBox containing logo
         Image topLogoImage = new Image("/appGraphics/edusystems.png");
         ImageView topLogoImageView = new ImageView(topLogoImage);
@@ -24,6 +27,37 @@ public class FrameView {
         topHBox.setPrefHeight(100);
         topHBox.setStyle("-fx-background-color: #000000");
 
+        // Menu option - Home
+        Label homeLabel = new Label("Home");
+        homeLabel.setPadding(new Insets(-10,0,0,0));
+        homeLabel.setStyle("-fx-text-fill: #AAAAAA");
+        Image homeImage = new Image("/appGraphics/home.png");
+        Image homeMouseOverImage = new Image("/appGraphics/home-mouseover.png");
+        Image homeSelectedImage = new Image("/appGraphics/home-selected.png");
+        ImageView homeImageView = new ImageView(homeImage);
+        homeImageView.setScaleX(0.5);
+        homeImageView.setScaleY(0.5);
+        VBox homeVBox = new VBox();
+        homeVBox.setAlignment(Pos.CENTER);
+        homeVBox.getChildren().addAll(homeImageView,homeLabel);
+        if(!selectedView.equals("homeView")) {
+            homeVBox.setOnMouseEntered(event -> {
+                homeImageView.setImage(homeMouseOverImage);
+                homeLabel.setStyle("-fx-text-fill: #DC77FA");
+                homeVBox.setStyle("-fx-cursor: hand");
+            });
+            homeVBox.setOnMouseExited(event -> {
+                homeImageView.setImage(homeImage);
+                homeLabel.setStyle("-fx-text-fill: #AAAAAA");
+            });
+            homeVBox.setOnMouseClicked(event -> {
+                viewController.showView("homeView");
+            });
+        } else {
+            homeImageView.setImage((homeSelectedImage));
+        }
+
+        // Menu option - Order
         Label orderLabel = new Label("Order");
         orderLabel.setPadding(new Insets(-10,0,0,0));
         orderLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -36,46 +70,54 @@ public class FrameView {
         VBox orderVBox = new VBox();
         orderVBox.setAlignment(Pos.CENTER);
         orderVBox.getChildren().addAll(orderImageView,orderLabel);
-        orderVBox.setOnMouseEntered(event -> {
-            orderImageView.setImage(orderMouseOverImage);
-            orderLabel.setStyle("-fx-text-fill: #DC77FA");
-            // implement code to change mouse cursor to finger
-            orderVBox.setStyle("-fx-cursor: hand");
-        });
-        orderVBox.setOnMouseExited(event -> {
-            orderImageView.setImage(orderImage);
-            orderLabel.setStyle("-fx-text-fill: #AAAAAA");
-        });
-        orderVBox.setOnMouseClicked(event -> {
-            orderImageView.setImage((orderSelectedImage));
-        });
-        Label filmLabel = new Label("Movies");
-        filmLabel.setPadding(new Insets(-10,0,0,0));
-        filmLabel.setStyle("-fx-text-fill: #AAAAAA");
-        Image filmImage = new Image("/appGraphics/movies.png");
-        Image filmMouseOverImage = new Image("/appGraphics/movies-mouseover.png");
-        Image filmSelectedImage = new Image("/appGraphics/movies-selected.png");
-        ImageView filmImageView = new ImageView(filmImage);
-        filmImageView.setScaleX(0.5);
-        filmImageView.setScaleY(0.5);
-        VBox filmVBox = new VBox();
-        filmVBox.setAlignment(Pos.CENTER);
-        filmVBox.getChildren().addAll(filmImageView,filmLabel);
-        filmVBox.setOnMouseEntered(event -> {
-            filmImageView.setImage(filmMouseOverImage);
-            filmLabel.setStyle("-fx-text-fill: #DC77FA");
-            // implement code to change mouse cursor to finger
-            filmVBox.setStyle("-fx-cursor: hand");
-        });
-        filmVBox.setOnMouseExited(event -> {
-            filmImageView.setImage(filmImage);
-            filmLabel.setStyle("-fx-text-fill: #AAAAAA");
-        });
-        filmVBox.setOnMouseClicked(event -> {
-            filmImageView.setImage((filmSelectedImage));
-            //updateContentPane("homeView");
-            System.out.println("contentPaneContent should been set to the VBox");
-        });
+        if(!selectedView.equals("orderView")) {
+            orderVBox.setOnMouseEntered(event -> {
+                orderImageView.setImage(orderMouseOverImage);
+                orderLabel.setStyle("-fx-text-fill: #DC77FA");
+                orderVBox.setStyle("-fx-cursor: hand");
+            });
+            orderVBox.setOnMouseExited(event -> {
+                orderImageView.setImage(orderImage);
+                orderLabel.setStyle("-fx-text-fill: #AAAAAA");
+            });
+            orderVBox.setOnMouseClicked(event -> {
+                viewController.showView("orderView");
+            });
+        } else {
+                orderImageView.setImage((orderSelectedImage));
+        }
+
+        // Menu option - Movies
+        Label movieLabel = new Label("Movies");
+        movieLabel.setPadding(new Insets(-10,0,0,0));
+        movieLabel.setStyle("-fx-text-fill: #AAAAAA");
+        Image movieImage = new Image("/appGraphics/movies.png");
+        Image movieMouseOverImage = new Image("/appGraphics/movies-mouseover.png");
+        Image movieSelectedImage = new Image("/appGraphics/movies-selected.png");
+        ImageView movieImageView = new ImageView(movieImage);
+        movieImageView.setScaleX(0.5);
+        movieImageView.setScaleY(0.5);
+        VBox movieVBox = new VBox();
+        movieVBox.setAlignment(Pos.CENTER);
+        movieVBox.getChildren().addAll(movieImageView,movieLabel);
+        if(!selectedView.equals("movieView")) {
+            movieVBox.setOnMouseEntered(event -> {
+                movieImageView.setImage(movieMouseOverImage);
+                movieLabel.setStyle("-fx-text-fill: #DC77FA");
+                movieVBox.setStyle("-fx-cursor: hand");
+            });
+            movieVBox.setOnMouseExited(event -> {
+                movieImageView.setImage(movieImage);
+                movieLabel.setStyle("-fx-text-fill: #AAAAAA");
+            });
+            movieVBox.setOnMouseClicked(event -> {
+                viewController.showView("movieView");
+            });
+        } else {
+            movieImageView.setImage((movieSelectedImage));
+        }
+
+        // Menu option - Customer
         Label customerLabel = new Label("Customer");
         customerLabel.setPadding(new Insets(-10,0,0,0));
         customerLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -88,22 +130,26 @@ public class FrameView {
         VBox customerVBox = new VBox();
         customerVBox.setAlignment(Pos.CENTER);
         customerVBox.getChildren().addAll(customerImageView,customerLabel);
-        customerVBox.setOnMouseEntered(event -> {
-            customerImageView.setImage(customerMouseOverImage);
-            customerLabel.setStyle("-fx-text-fill: #DC77FA");
-            // implement code to change mouse cursor to finger
-            customerVBox.setStyle("-fx-cursor: hand");
+        if(!selectedView.equals("customerView")) {
+            customerVBox.setOnMouseEntered(event -> {
+                customerImageView.setImage(customerMouseOverImage);
+                customerLabel.setStyle("-fx-text-fill: #DC77FA");
+                // implement code to change mouse cursor to finger
+                customerVBox.setStyle("-fx-cursor: hand");
 
-        });
-        customerVBox.setOnMouseExited(event -> {
-            customerImageView.setImage(customerImage);
-            customerLabel.setStyle("-fx-text-fill: #AAAAAA");
-        });
-        customerVBox.setOnMouseClicked(event -> {
+            });
+            customerVBox.setOnMouseExited(event -> {
+                customerImageView.setImage(customerImage);
+                customerLabel.setStyle("-fx-text-fill: #AAAAAA");
+            });
+            customerVBox.setOnMouseClicked(event -> {
+                viewController.showView("customerView");
+            });
+        } else {
             customerImageView.setImage((customerSelectedImage));
-            //updateContentPane("customerView");
-            System.out.println("contentPaneContent should been set to the VBox");
-        });
+        }
+
+        // Menu option - Staff
         Label staffLabel = new Label("Staff");
         staffLabel.setPadding(new Insets(-10,0,0,0));
         staffLabel.setStyle("-fx-text-fill: #AAAAAA");
@@ -116,27 +162,27 @@ public class FrameView {
         VBox staffVBox = new VBox();
         staffVBox.setAlignment(Pos.CENTER);
         staffVBox.getChildren().addAll(staffImageView,staffLabel);
-        staffVBox.setOnMouseEntered(event -> {
-            staffImageView.setImage(staffMouseOverImage);
-            staffLabel.setStyle("-fx-text-fill: #DC77FA");
-            // implement code to change mouse cursor to finger
-            staffVBox.setStyle("-fx-cursor: hand");
-        });
-        staffVBox.setOnMouseExited(event -> {
-            staffImageView.setImage(staffImage);
-            staffLabel.setStyle("-fx-text-fill: #AAAAAA");
-        });
-        staffVBox.setOnMouseClicked(event -> {
+        if(!selectedView.equals("staffView")) {
+            staffVBox.setOnMouseEntered(event -> {
+                staffImageView.setImage(staffMouseOverImage);
+                staffLabel.setStyle("-fx-text-fill: #DC77FA");
+                // implement code to change mouse cursor to finger
+                staffVBox.setStyle("-fx-cursor: hand");
+            });
+            staffVBox.setOnMouseExited(event -> {
+                staffImageView.setImage(staffImage);
+                staffLabel.setStyle("-fx-text-fill: #AAAAAA");
+            });
+            staffVBox.setOnMouseClicked(event -> {
+                viewController.showView("staffView");
+            });
+        } else {
             staffImageView.setImage((staffSelectedImage));
-        });
+        }
         VBox menuVBox = new VBox();
-        menuVBox.getChildren().addAll(orderVBox, filmVBox, customerVBox, staffVBox);
+        menuVBox.getChildren().addAll(homeVBox, orderVBox, movieVBox, customerVBox, staffVBox);
         menuVBox.setStyle("-fx-background-color: #000000");
         menuVBox.setPrefHeight(668);
-        /*
-         * The Pane - contentPain is where we add the unique content of each section.
-         * Add tables and buttons here to view and manipulate the data from the database.
-         */
         Pane contentPane = new Pane();
         contentPane.setStyle("-fx-background-color: #333231");
         contentPane.setMinWidth(1180);
