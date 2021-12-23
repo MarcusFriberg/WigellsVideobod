@@ -16,8 +16,8 @@ import org.edusystems.entities.Customer;
 import org.edusystems.entities.TextFieldResult;
 
 public class CustomerView {
-
-    CustomerViewController customerViewController = new CustomerViewController();
+    // Variables
+    CustomerViewController customerViewController;
     ObservableList<TextFieldResult> data = FXCollections.observableArrayList();
     TextField textFieldSearchField = new TextField();
     TableView tableViewResultArea = new TableView();
@@ -51,6 +51,7 @@ public class CustomerView {
 
     // Constructor
     public CustomerView() {
+        customerViewController = new CustomerViewController(this);
     }
 
     /*
@@ -156,6 +157,11 @@ public class CustomerView {
             tableViewResultArea.setItems(data);
         });
 
+        textFieldSearchField.setOnKeyTyped(event -> {
+            data = customerViewController.searchFromCustomer(textFieldSearchField);
+            tableViewResultArea.setItems(data);
+        });
+
         bDelete.setOnAction(event -> {
             hBoxInfoBannerCanNotDelete.setVisible(false);
             int customerCopy = tableViewResultArea.getSelectionModel().getSelectedIndex();
@@ -177,8 +183,13 @@ public class CustomerView {
             CustomerCreateView customerCreateView = new CustomerCreateView();
             customerCreateView.createUpdateView("create");
         });
-
+        showAllCustomers();
         return content;
+    }
+
+    public void showAllCustomers() {
+        data = customerViewController.searchFromCustomer(textFieldSearchField);
+        tableViewResultArea.setItems(data);
     }
 
 }
