@@ -2,6 +2,8 @@ package org.edusystems.entities;
 // Imports
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "city")
@@ -14,18 +16,19 @@ public class City {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "country")
-    private String country;
+    @Column(name = "country_id")
+    private int country_id;
+
 
     @Column(name = "last_update")
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     public City() {
     }
 
-    public City(String city, String country) {
+    public City(String city, int country) {
         this.city = city;
-        this.country = country;
+        this.country_id = country;
     }
 
     //Setters
@@ -33,8 +36,8 @@ public class City {
         this.city = city;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountry_id(int country) {
+        this.country_id = country_id;
     }
 
     //Getters
@@ -46,11 +49,15 @@ public class City {
         return city;
     }
 
-    public String getCountry() {
-        return country;
+    public int getCountry_id() {
+        return country_id;
     }
 
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
+    }
+
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }
