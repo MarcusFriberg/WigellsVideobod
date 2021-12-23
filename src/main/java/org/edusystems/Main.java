@@ -4,10 +4,11 @@ import org.edusystems.controller.ViewController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+import java.sql.SQLException;
 
+public class Main extends Application {
     // Main Method, launches the start-method.
-    public static void main(String[] args) {
+    public static void main(String[] args)throws SQLException {
         launch(args);
     }
 
