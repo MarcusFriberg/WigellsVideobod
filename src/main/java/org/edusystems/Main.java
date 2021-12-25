@@ -3,10 +3,13 @@ package org.edusystems;
 import org.edusystems.controller.ViewController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+import org.edusystems.view.LoginView;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.sql.SQLException;
 
 public class Main extends Application {
+    public static EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("hibernate");
     // Main Method, launches the start-method.
     public static void main(String[] args)throws SQLException {
         launch(args);
@@ -26,8 +29,6 @@ public class Main extends Application {
         primaryStage.setTitle("Wigells videobod");
         primaryStage.setResizable(true);
         // Create a new startView and provide it with the primaryStage and let it present itself
-        //LoginView loginView = new LoginView(primaryStage);
-        //loginView.present();
         ViewController viewController = new ViewController(primaryStage);
     }
 }

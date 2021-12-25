@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import org.edusystems.Main;
 import org.edusystems.entities.*;
 import org.edusystems.view.CustomerView;
 import javax.persistence.*;
@@ -14,13 +15,16 @@ import java.util.List;
 
 public class CustomerViewController {
     // Variables
-    CustomerView customerView;
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("hibernate");
+    private CustomerView customerView;
+    private ViewController viewController;
+    private EntityManagerFactory ENTITY_MANAGER_FACTORY;
     // En observable list av Customer
 
-    public CustomerViewController(CustomerView customerView){
+    public CustomerViewController(CustomerView customerView, ViewController viewController){
         this.customerView = customerView;
-        // Anrop till en metod1 som hämtar alla customers i databasen och lagrar som en observable list of customers
+        this.viewController = viewController;
+        ENTITY_MANAGER_FACTORY = Main.ENTITY_MANAGER_FACTORY;
+        // Anrop till en method1 som hämtar alla customers i databasen och lagrar som en observable list of customers
     }
 
     // Metod1 för att hämta alla customers i tabellen customers och skapar objekt(entity's) i en "obervable list1"
@@ -43,17 +47,17 @@ public class CustomerViewController {
             Query query = entityManager.createNativeQuery("SELECT customer_id FROM (((customer INNER JOIN address " +
                     "ON customer.address_id = address.address_id) INNER JOIN city ON address.city_id = city.city_id) " +
                     "INNER JOIN country ON city.country_id = country.country_id) " +
-                    "WHERE first_name CONTAINS " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "last_name CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "email CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "address CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "address2 CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "district CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "postal_code CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "phone CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "city CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "country CONTAINS  " + "'" + textFieldSearchField.getText() + "%'" + "OR " +
-                    "country CONTAINS  " + "'" + textFieldSearchField.getText() + "%'");
+                    "WHERE first_name LIKE " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "last_name LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "email LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "address LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "address2 LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "district LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "postal_code LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "phone LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "city LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "country LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
+                    "country LIKE  " + "'%" + textFieldSearchField.getText() + "%'");
             customerIDList = query.getResultList();
 
             List<Customer> customersList = new ArrayList<>();
@@ -292,9 +296,6 @@ public class CustomerViewController {
         } finally {
             entityManager.close();
         }
-    }
-
-    public static void deleteCustomer(int customerID, HBox hBoxInfoBannerCanNotDelete, Label labelInfoBannerCanNotDelete) {
     }
 
     public ObservableList<TextFieldResult> searchFromCustomer(TextField textFieldSearchField) {

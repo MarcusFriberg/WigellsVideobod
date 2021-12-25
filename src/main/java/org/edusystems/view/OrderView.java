@@ -7,15 +7,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.edusystems.controller.OrderViewController;
 import org.edusystems.entities.Rental;
 
 import javax.persistence.criteria.CriteriaBuilder;
 
 public class OrderView {
+    // Variables
+    private MainView mainView;
+    private OrderViewController orderViewController;
 
     // Constructor
-    public OrderView() {
-
+    public OrderView(MainView mainView) {
+        this.mainView = mainView;
+        orderViewController = new OrderViewController(this, mainView.getViewController());
     }
 
     /*

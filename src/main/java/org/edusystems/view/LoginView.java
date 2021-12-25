@@ -3,7 +3,6 @@ package org.edusystems.view;
 // Imports
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import org.edusystems.controller.LoginViewController;
 
 /*
  * Class LoginView
@@ -23,12 +22,14 @@ import javafx.stage.Stage;
  * @version: 1.0
  */
 public class LoginView {
-    // Variables
-    private final Stage primaryStage;
+    private LoginViewController loginViewController;
+    private MainView mainView;
+    public Label alertLabel;
 
     // Constructor
-    public LoginView(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public LoginView(MainView mainView) {
+        this.mainView = mainView;
+        loginViewController = new LoginViewController(this, mainView.getViewController());
     }
 
     /*
@@ -41,7 +42,7 @@ public class LoginView {
      * @author: marcus.friberg@edu.edugrade.se
      * @version: 1.0
      */
-    public void present() {
+    public VBox getContent() {
         // First row in View is the image
         Image loginImage = new Image("appGraphics/wigellsvideobodlogocats.png");
         ImageView loginImageView = new ImageView(loginImage);
@@ -68,7 +69,14 @@ public class LoginView {
         // Fourth row in the View is the login button
         Button loginButton = new Button("Login");
         loginButton.setAlignment(Pos.CENTER);
-        // Fifth row is the company logo
+        loginButton.setOnAction(event -> {
+            loginViewController.userLogin(userTextField.getText(), passwordTextField.getText());
+        });
+        // Fifth row is an alert message
+        alertLabel = new Label("");
+        alertLabel.setStyle("-fx-text-fill: #FF0000; -fx-font-size: 18");
+        alertLabel.setVisible(false);
+        // Last row is the company logo
         Image edusystemsImage = new Image("appGraphics/edusystems.png");
         ImageView edusystemsImageView = new ImageView(edusystemsImage);
         edusystemsImageView.setScaleX(0.5);
@@ -79,15 +87,10 @@ public class LoginView {
         edusystemsHBox.setPadding(new Insets(150,0,5,0));
         // VBox will contain the image, username/password input fields and login button
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(imageHBox, userHBox, passwordHBox, loginButton, edusystemsHBox);
+        vBox.getChildren().addAll(imageHBox, userHBox, passwordHBox, loginButton, alertLabel, edusystemsHBox);
         vBox.setAlignment(Pos.CENTER);
         vBox.setStyle("");
-        // Make a new Scene containing the stackPane and set the size as the backgrounds size
-        Scene scene = new Scene(vBox, 1280, 768);
-        // Set this scene as the scene of primaryStage
-        primaryStage.setScene(scene);
-        // Show the stage
-        primaryStage.show();
+        return vBox;
     }
 }
 

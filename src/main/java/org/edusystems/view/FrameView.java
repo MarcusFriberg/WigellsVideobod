@@ -22,8 +22,12 @@ public class FrameView {
         // Top HBox containing logo
         Image topLogoImage = new Image("/appGraphics/edusystems.png");
         ImageView topLogoImageView = new ImageView(topLogoImage);
+        Label userLoggedInLabel = new Label("Logged in as: " + viewController.getUserLoggedInFullName());
+        userLoggedInLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        userLoggedInLabel.setPadding(new Insets(80,0,0,700));
+        userLoggedInLabel.setStyle("-fx-text-fill: #FFFFFF");
         HBox topHBox = new HBox();
-        topHBox.getChildren().add(topLogoImageView);
+        topHBox.getChildren().addAll(topLogoImageView, userLoggedInLabel);
         topHBox.setPrefHeight(100);
         topHBox.setStyle("-fx-background-color: #000000");
 

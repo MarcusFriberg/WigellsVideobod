@@ -12,11 +12,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
-import org.edusystems.controller.CustomerCreateViewController;
-import org.edusystems.controller.CustomerViewController;
-import org.edusystems.entities.Customer;
+import org.edusystems.controller.CreateCustomerViewController;
 
-public class CustomerCreateView {
+public class CreateCustomerView {
+    CreateCustomerViewController createCustomerViewController;
     TextField textFieldStoreID = new TextField();
     TextField textFieldFirstName = new TextField();
     TextField textFieldLastName = new TextField();
@@ -56,13 +55,13 @@ public class CustomerCreateView {
     HBox hBoxAddCustomer = new HBox();
     VBox vBoxCreateCustomer = new VBox();
 
-    CustomerCreateViewController customerCreateViewController = new CustomerCreateViewController();
+    //CreateCustomerViewController customerCreateViewController = new CreateCustomerViewController();
 
     BorderPane borderPane = new BorderPane();
     Stage stage = new Stage();
     Scene scene = new Scene(borderPane, 400, 450);
 
-    public CustomerCreateView() {}
+    public CreateCustomerView() {}
 
     public void createUpdateView(String createUpdate)
     {
@@ -140,22 +139,22 @@ public class CustomerCreateView {
 
         bCreate.setOnAction(event -> {
 
-            Short countryID = customerCreateViewController.getCountryID(textFieldCountry);
+            Short countryID = createCustomerViewController.getCountryID(textFieldCountry);
 
             if(countryID < 0) {
-                customerCreateViewController.createCountry(textFieldCountry);
-                countryID = customerCreateViewController.getCountryID(textFieldCountry);
+                createCustomerViewController.createCountry(textFieldCountry);
+                countryID = createCustomerViewController.getCountryID(textFieldCountry);
             }
-            Short cityID = customerCreateViewController.getCityID(textFieldCity);
+            Short cityID = createCustomerViewController.getCityID(textFieldCity);
             if(cityID < 0) {
-                customerCreateViewController.createCity(textFieldCity, countryID);
-                cityID = customerCreateViewController.getCityID(textFieldCity);
+                createCustomerViewController.createCity(textFieldCity, countryID);
+                cityID = createCustomerViewController.getCityID(textFieldCity);
             }
 
-            customerCreateViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
-            int addressID = customerCreateViewController.getAddressID();
+            createCustomerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
+            int addressID = createCustomerViewController.getAddressID();
 
-            customerCreateViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
+            createCustomerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
 
 
             textFieldAddress.clear();
