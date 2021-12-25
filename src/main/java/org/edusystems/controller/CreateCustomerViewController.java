@@ -3,45 +3,44 @@ package org.edusystems.controller;
 import javafx.scene.control.TextField;
 import org.edusystems.entities.Customer;
 
-import java.awt.*;
-
-public class CustomerCreateViewController {
-    Customer customer = new Customer();
+public class CreateCustomerViewController {
+    CustomerViewController customerViewController;
 
 
-    public CustomerCreateViewController() {
+    public CreateCustomerViewController(CustomerViewController customerViewController) {
+        this.customerViewController = customerViewController;
     }
 
     public Short getCountryID(TextField country) {
-        Short countryID = customer.searchCountryID(country);
+        Short countryID = customerViewController.searchCountryID(country);
         System.out.println(countryID);
         return countryID;
     }
 
     public void createCountry(TextField country) {
-        customer.createCountry(country);
+        customerViewController.createCountry(country);
     }
 
 
     public Short getCityID(TextField city) {
-        Short cityID = customer.searchCityID(city);
+        Short cityID = customerViewController.searchCityID(city);
         return cityID;
     }
 
     public void createCity(TextField city1, int countryID) {
-        customer.createCity(city1, countryID);
+        customerViewController.createCity(city1, countryID);
     }
 
 
     public void addAddress(TextField textFieldAddress, TextField textFieldAddress2, TextField textFieldPostalCode, TextField textFieldDistrict, TextField textFieldPhone, int cityID) {
-     customer.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
+        customerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
     }
 
     public int getAddressID() {
-        return customer.searchAddressID();
+        return customerViewController.searchAddressID();
     }
 
     public void addCustomer(TextField textFieldStoreID, TextField textFieldFirstName, TextField textFieldLastName, TextField textFieldEmail, int addressID) {
-    customer.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
+        customerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
     }
 }

@@ -14,20 +14,20 @@ public class MainView {
     private MovieView movieView;
     private CustomerView customerView;
     private StaffView staffView;
-    ViewController viewController;
+    private LoginView loginView;
+    private ViewController viewController;
     VBox content;
 
     public MainView(Stage primaryStage, ViewController viewController) {
         this.primaryStage = primaryStage;
         this.viewController = viewController;
         frameView = new FrameView(viewController);
-        homeView = new HomeView();
-        orderView = new OrderView();
-        movieView = new MovieView();
-        customerView = new CustomerView();
-        staffView = new StaffView();
-
-        present("homeView");
+        homeView = new HomeView(this);
+        orderView = new OrderView(this);
+        movieView = new MovieView(this);
+        customerView = new CustomerView(this);
+        staffView = new StaffView(this);
+        loginView = new LoginView(this);
     }
 
     public void present(String view) {
@@ -58,6 +58,22 @@ public class MainView {
         // Set the heigt of the meny VBOX to the primaryStage height minus the topHbar height
         // Show the stage
         primaryStage.show();
+    }
+
+    public void login() {
+        content = loginView.getContent();
+        // Make a new Scene containing the VBox (content) and set the size as the backgrounds size
+        Scene scene = new Scene(content, 1280, 768);
+        // Set this scene as the scene of primaryStage
+        primaryStage.setScene(scene);
+        // Set the heigt of the meny VBOX to the primaryStage height minus the topHbar height
+        // Show the stage
+        primaryStage.show();
+    }
+
+    // Getters
+    public ViewController getViewController() {
+        return viewController;
     }
 
 }

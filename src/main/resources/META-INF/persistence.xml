@@ -6,6 +6,19 @@
     <persistence-unit name="hibernate" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>org.edusystems.Main</class>
+        <class>org.edusystems.entities.Actor</class>
+        <class>org.edusystems.entities.Address</class>
+        <class>org.edusystems.entities.City</class>
+        <class>org.edusystems.entities.Country</class>
+        <class>org.edusystems.entities.Customer</class>
+        <class>org.edusystems.entities.Film</class>
+        <class>org.edusystems.entities.FilmActor</class>
+        <class>org.edusystems.entities.Inventory</class>
+        <class>org.edusystems.entities.Language</class>
+        <class>org.edusystems.entities.Rental</class>
+        <class>org.edusystems.entities.Staff</class>
+        <class>org.edusystems.entities.Store</class>
+        <class>org.edusystems.entities.TextFieldResult</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sakila?serverTimezone=UTC"/>

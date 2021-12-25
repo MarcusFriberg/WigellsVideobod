@@ -4,20 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.edusystems.controller.CustomerViewController;
-import org.edusystems.entities.Customer;
 import org.edusystems.entities.TextFieldResult;
 
 public class CustomerView {
     // Variables
-    CustomerViewController customerViewController;
+    private CustomerViewController customerViewController;
+    private MainView mainView;
     ObservableList<TextFieldResult> data = FXCollections.observableArrayList();
     TextField textFieldSearchField = new TextField();
     TableView tableViewResultArea = new TableView();
@@ -50,8 +47,9 @@ public class CustomerView {
     VBox content = new VBox();
 
     // Constructor
-    public CustomerView() {
-        customerViewController = new CustomerViewController(this);
+    public CustomerView(MainView mainView) {
+        this.mainView = mainView;
+        customerViewController = new CustomerViewController(this, mainView.getViewController());
     }
 
     /*
@@ -180,7 +178,7 @@ public class CustomerView {
 
         bCreate.setOnAction(event -> {
             hBoxInfoBannerCanNotDelete.setVisible(false);
-            CustomerCreateView customerCreateView = new CustomerCreateView();
+            CreateCustomerView customerCreateView = new CreateCustomerView();
             customerCreateView.createUpdateView("create");
         });
         showAllCustomers();

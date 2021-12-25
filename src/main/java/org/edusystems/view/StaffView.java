@@ -2,12 +2,17 @@ package org.edusystems.view;
 // Imports
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.edusystems.controller.StaffViewController;
 
 public class StaffView {
+    // Variables
+    private MainView mainView;
+    private StaffViewController staffViewController;
 
     // Constructor
-    public StaffView() {
-
+    public StaffView(MainView mainView) {
+        this.mainView = mainView;
+        staffViewController = new StaffViewController(this, mainView.getViewController());
     }
 
     /*

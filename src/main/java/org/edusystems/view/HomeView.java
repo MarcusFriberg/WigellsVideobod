@@ -3,6 +3,7 @@ package org.edusystems.view;
 // Imports
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import org.edusystems.controller.HomeViewController;
 
 /*
  * Class HomeView
@@ -18,10 +19,14 @@ import javafx.scene.layout.*;
  * @version: 1.0
  */
 public class HomeView {
+    // Variables
+    private MainView mainView;
+    private HomeViewController homeViewController;
 
     // Constructor
-    public HomeView() {
-
+    public HomeView(MainView mainView) {
+        this.mainView = mainView;
+        homeViewController = new HomeViewController(this, mainView.getViewController());
     }
 
     /*

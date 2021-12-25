@@ -2,12 +2,17 @@ package org.edusystems.view;
 // Imports
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.edusystems.controller.MovieViewController;
 
 public class MovieView {
+    // Variables
+    private MainView mainView;
+    private MovieViewController movieViewController;
 
     // Constructor
-    public MovieView() {
-
+    public MovieView(MainView mainView) {
+        this.mainView = mainView;
+        movieViewController = new MovieViewController(this, mainView.getViewController());
     }
 
     /*
