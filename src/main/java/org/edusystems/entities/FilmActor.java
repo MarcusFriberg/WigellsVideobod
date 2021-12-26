@@ -2,6 +2,7 @@ package org.edusystems.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "film_actor")
@@ -14,7 +15,7 @@ public class FilmActor {
     private int filmId;
 
     @Column (name = "last_update")
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     // Constructor
     public FilmActor() {
@@ -43,7 +44,7 @@ public class FilmActor {
         return filmId;
     }
 
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 }

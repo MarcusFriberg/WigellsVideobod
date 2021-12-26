@@ -2,6 +2,7 @@ package org.edusystems.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "language")
@@ -15,7 +16,7 @@ public class Language {
     private String name;
 
     @Column(name = "last_update")
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     // Constructor
     public Language(String name) {
@@ -38,7 +39,7 @@ public class Language {
         return name;
     }
 
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 }
