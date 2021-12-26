@@ -1,11 +1,12 @@
 package org.edusystems.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
 @Table(name = "film")
-public class Film {
+public class Film implements Serializable {
     @Id
     @Column(name = "film_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +39,10 @@ public class Film {
     @Column(name = "replacement_cost")
     private double replacementCost;
 
+    //@Enumerated(EnumType.STRING)
+    //private Rating rating;
+
+    //public enum Rating { G, PG, PG-13, R, NC-17 }
     //@Column(name = "rating")
     //private enum rating{'G' = ("G"), };
 
