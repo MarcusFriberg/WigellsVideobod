@@ -13,9 +13,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import org.edusystems.controller.CreateCustomerViewController;
+import org.edusystems.controller.CustomerViewController;
+import org.edusystems.controller.ViewController;
 
+/*
+ * Class CreateCustomerView
+ * This class creates the graphics for the CreateCustomerView-Window.
+ * It uses Textfields, labels and lambda-functions.
+ * @author: Linda Djurström
+ * @author: linda.djurstrom@edu.edugrade.se
+ * @version: 1.0.
+ */
 public class CreateCustomerView {
+    //Variabels
     CreateCustomerViewController createCustomerViewController;
+    CustomerViewController customerViewController;
     TextField textFieldStoreID = new TextField();
     TextField textFieldFirstName = new TextField();
     TextField textFieldLastName = new TextField();
@@ -39,7 +51,6 @@ public class CreateCustomerView {
     Label labelCountry = new Label("Country");
     Label labelPhone = new Label("Phone");
     Button bCreate = new Button("Create");
-
     HBox hBoxStoreID = new HBox();
     HBox hBoxFirstName = new HBox();
     HBox hBoxLastName = new HBox();
@@ -54,21 +65,35 @@ public class CreateCustomerView {
     HBox hBoxButtonsCreate = new HBox();
     HBox hBoxAddCustomer = new HBox();
     VBox vBoxCreateCustomer = new VBox();
-
-    //CreateCustomerViewController customerCreateViewController = new CreateCustomerViewController();
-
     BorderPane borderPane = new BorderPane();
     Stage stage = new Stage();
     Scene scene = new Scene(borderPane, 400, 450);
 
-    public CreateCustomerView() {}
+    //Constructor
+    public CreateCustomerView(CustomerViewController customerViewController) {
+        this.customerViewController = customerViewController;
+        createCustomerViewController = new CreateCustomerViewController(customerViewController);
+    }
 
-    public void createUpdateView(String createUpdate)
-    {
-        stage.setScene(scene);
-        if(createUpdate.equals(createUpdate)) {
-            stage.setTitle("Create customer");
+    /*
+     * Method createUpdateView
+     * Creates the graphics for the window and initiates it.
+     * @params: takes a string-value that determines if the window should create a new customer or update an already exsisting customer.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public void createUpdateView(String createUpdate) {
+        //The value in createUpdate-stringparameter determines the Title for the stage.
+        switch (createUpdate) {
+            case "create":
+                stage.setTitle("Create customer");
+                break;
+            case "update":
+                stage.setTitle("Create customer");
         }
+
+        //Editing the variables, adding children and sets the stage.
         textFieldStoreID.setText("1");
         textFieldStoreID.setFont(Font.font(null, FontPosture.ITALIC, 15));
         textFieldStoreID.setEditable(false);
@@ -83,7 +108,6 @@ public class CreateCustomerView {
         labelCity.setMinWidth(90);
         labelCountry.setMinWidth(90);
         labelPhone.setMinWidth(90);
-
         hBoxAddCustomer.setAlignment(Pos.BASELINE_CENTER);
         hBoxAddCustomer.setPadding(new Insets(0, 0, 0, 0));
         hBoxStoreID.getChildren().addAll(labelStoreID, textFieldStoreID);
@@ -111,11 +135,9 @@ public class CreateCustomerView {
         hBoxButtonsCreate.getChildren().addAll(bCreate);
         hBoxButtonsCreate.setAlignment(Pos.BASELINE_RIGHT);
         hBoxButtonsCreate.setPadding(new Insets(0, 60, 0, 0));
-
         textFieldStoreID.setText("1");
         textFieldStoreID.setFont(Font.font(null, FontPosture.ITALIC, 15));
         textFieldStoreID.setEditable(false);
-
         labelStoreID.setMinWidth(90);
         labelFirstName.setMinWidth(90);
         labelLastName.setMinWidth(90);
@@ -127,36 +149,51 @@ public class CreateCustomerView {
         labelCity.setMinWidth(90);
         labelCountry.setMinWidth(90);
         labelPhone.setMinWidth(90);
-
         vBoxCreateCustomer.getChildren().addAll(hBoxAddCustomer, hBoxStoreID, hBoxFirstName, hBoxLastName, hBoxEmail,
                 hBoxAddress, hBoxAddress2, hBoxPostalCode, hBoxDistrict, hBoxCity, hBoxCountry, hBoxPhone, hBoxButtonsCreate);
         vBoxCreateCustomer.setPadding(new Insets(50,0 , 0, 0));
-
         borderPane.setCenter(vBoxCreateCustomer);
         stage.setScene(scene);
-
         stage.show();
 
+        //A lambda function for the button bCreate.
         bCreate.setOnAction(event -> {
-
-            Short countryID = createCustomerViewController.getCountryID(textFieldCountry);
-
+            /*Takes the Textfield the user has filled in for country, sends it in to a method in createCustomerViewController,
+             stores the returned value in a short-variabel.
+             */
+            Short countryID = createCustomerViewController.searchCountryID(textFieldCountry);
+            /*If there is no country-match in the method above the return value is -1, and it enters the if-sats.
+            A new method in createCustomerViewController is called upon, the method creates a new country with the value from
+            textFieldCountry.
+             */
             if(countryID < 0) {
                 createCustomerViewController.createCountry(textFieldCountry);
-                countryID = createCustomerViewController.getCountryID(textFieldCountry);
+                //When a new country is created a new attempt to grab the new countryID is made.
+                countryID = createCustomerViewController.searchCountryID(textFieldCountry);
             }
-            Short cityID = createCustomerViewController.getCityID(textFieldCity);
+            /*When the country is made it uses the countryID and textFieldCity(that the user has added) in a new method to search
+            if the city already exist in the database.
+             */
+            Short cityID = createCustomerViewController.searchCityID(textFieldCity, countryID);
+            //If it doesnt exist the return value is -1 and we enter the if-sats down under.
             if(cityID < 0) {
+                /*Calls upon a method to create a new city in createCustomerViewController. The countryID required for the table city is
+                sent in, from the Short-variable cityID.
+                 */
                 createCustomerViewController.createCity(textFieldCity, countryID);
-                cityID = createCustomerViewController.getCityID(textFieldCity);
+                //Grabs the newly made cityID.
+                cityID = createCustomerViewController.searchCityID(textFieldCity,countryID);
             }
 
+            //Calls upon a method to create a new address with the cityID-value grabbed above.
             createCustomerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
-            int addressID = createCustomerViewController.getAddressID();
+            //Grabs the addressID from the newly created address.
+            int addressID = createCustomerViewController.searchAddressID();
 
+            //Creates a new customer with the values the user has added in the textfields and the newly created addressID.
             createCustomerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
 
-
+            //Clears all the textfields.
             textFieldAddress.clear();
             textFieldAddress2.clear();
             textFieldPostalCode.clear();
@@ -168,8 +205,5 @@ public class CreateCustomerView {
             textFieldLastName.clear();
             textFieldEmail.clear();
         });
-
     }
-
-
 }

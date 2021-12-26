@@ -12,38 +12,56 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+ * Class CustomerViewController.
+ * This class holds all the functions/methods for the CustomerView.
+ * @author: Linda Djurström
+ * @author: Marcus Friberg
+ * @author: Albin Wallström
+ * @author: linda.djurstrom@edu.edugrade.se
+ * @author: marcus.friberg@edu.edugrade.se
+ * @author: albin.wallstrom@edu.edugrade.se
+ * @version: 1.0.
+ */
 public class CustomerViewController {
     // Variables
     private CustomerView customerView;
     private ViewController viewController;
     private EntityManagerFactory ENTITY_MANAGER_FACTORY;
-    // En observable list av Customer
 
+    //Constructor
     public CustomerViewController(CustomerView customerView, ViewController viewController){
         this.customerView = customerView;
         this.viewController = viewController;
         ENTITY_MANAGER_FACTORY = Main.ENTITY_MANAGER_FACTORY;
-        // Anrop till en method1 som hämtar alla customers i databasen och lagrar som en observable list of customers
     }
 
-    // Metod1 för att hämta alla customers i tabellen customers och skapar objekt(entity's) i en "obervable list1"
-
-    // Metod2 för att filtrera "observable list1" och returnera dom objekt som matchar sökningen
-
-    // Beskrivning
+    /*
+     * Method searchCustomer
+     * Method that searches in the database and fetches the objects that relates to the user's entry in the SearchField.
+     * Params: TextFieldSearchField.
+     * Returns: ObservableList.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public ObservableList<TextFieldResult> searchCustomer(TextField textFieldSearchField) {
-        // Vad händer här?
+        //Crates the observableList data, used later in the code.
         final ObservableList<TextFieldResult> data = FXCollections.observableArrayList();
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
-
+        //An arraylist used later to store customerID's.
         List<Short> customerIDList = new ArrayList<>(1);
+        //Arraylist's used later to store objects.
+        List<Customer> customersList = new ArrayList<>();
+        List<Address> addressList = new ArrayList<>();
+        List<City> cityList = new ArrayList<>();
+        List<Country> countryList = new ArrayList<>();
 
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            // Vad händer här?
+            //NativeQuery to the database, stored in Query.
             Query query = entityManager.createNativeQuery("SELECT customer_id FROM (((customer INNER JOIN address " +
                     "ON customer.address_id = address.address_id) INNER JOIN city ON address.city_id = city.city_id) " +
                     "INNER JOIN country ON city.country_id = country.country_id) " +
@@ -58,25 +76,30 @@ public class CustomerViewController {
                     "city LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
                     "country LIKE  " + "'%" + textFieldSearchField.getText() + "%'" + "OR " +
                     "country LIKE  " + "'%" + textFieldSearchField.getText() + "%'");
+
+            //The query stores all the customerID's that matches the users search in the SearchField in the customerIDList.
             customerIDList = query.getResultList();
 
-            List<Customer> customersList = new ArrayList<>();
-            List<Address> addressList = new ArrayList<>();
-            List<City> cityList = new ArrayList<>();
-            List<Country> countryList = new ArrayList<>();
-            //List<Store> storeList = new ArrayList<>(1);
-
-            // Beskrivning
+            //If there are hits in the search it continues in the if-sats.
             if (!customerIDList.isEmpty()) {
+                //The loop continues as many times as the size of the customerIDList.
                 for (int i = 0; i < customerIDList.size(); i++) {
-                    customersList.add(entityManager.getReference(Customer.class, customerIDList.get(i).intValue()));
+                    /*The loop uses entityManager to grab objects via the primaryKey. The primaryKey in customer is customerID.
+                    The object is added to the customerList.
+                     */
+                    customersList.add(entityManager.getReference(Customer.class, customerIDList.get(i)));
+                    //Via the customerObject you can fetch the addressID, and grab the addressObject (addressID is primarykey in addresstable)
                     addressList.add(entityManager.getReference(Address.class, customersList.get(i).getAddressId()));
+                    //cityID is reachable via the addressObject now stored in addressList.
                     cityList.add(entityManager.getReference(City.class, addressList.get(i).getCity_id()));
+                    //countryID is reachable via the cityObject now stored in cityList.
                     countryList.add(entityManager.getReference(Country.class, cityList.get(i).getCountry_id()));
-                    //storeList.add(entityManager.getReference(Customer.class, customersList.get(i).getStore_id()));
                 }
             }
 
+            /*New objects from the TextFieldResultClass is created with all the information from the objects customer, city, country and address.
+            The objects are stored in the observableList data.
+             */
             for (int i = 0; i < customerIDList.size(); i++) {
                 data.add(new TextFieldResult(customersList.get(i).getCustomerId(), customersList.get(i).getFirstName(), customersList.get(i).getLastName(),
                         customersList.get(i).getEmail(), addressList.get(i).getAddress(), addressList.get(i).getAddress2(), addressList.get(i).getPostal_code(),
@@ -93,10 +116,18 @@ public class CustomerViewController {
         } finally {
             entityManager.close();
         }
-
+        //Returns the data-list.
         return data;
     }
 
+    /*
+     * Method deleteCustomer
+     * Method that deletes the customer via customerID. A infoBanner is shown when a customer can't be deleted.
+     * Params: customerID, hBoxInfoBannerCanNotDelete, labelInfoBannerCanNotDelete.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void deleteCustomer(int customerID, HBox hBoxInfoBannerCanNotDelete, Label labelInfoBannerCanNotDelete) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
@@ -104,11 +135,12 @@ public class CustomerViewController {
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
+            //Query to delete the customer.
             Query query = entityManager.createNativeQuery("DELETE FROM customer WHERE customer_id = " + customerID);
             query.executeUpdate();
             transaction.commit();
+            //If a customer can't be deleted the infoBanner with the information to the customer is shown.
         } catch (PersistenceException f) {
-
             labelInfoBannerCanNotDelete.setText("Denna kund går inte att radera än, se till att kunden \n återlämnat " +
                     "alla filmer och betalat sina avgifter.");
             hBoxInfoBannerCanNotDelete.setVisible(true);
@@ -121,193 +153,6 @@ public class CustomerViewController {
             entityManager.close();
         }
     }
-
-    public Short searchCountryID(TextField country) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        List<Short> country_List = new ArrayList<>(1);
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Query query = entityManager.createNativeQuery("SELECT country_id FROM country WHERE country = " + "'" + country.getText() + "'");
-            country_List = query.getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-        if (country_List.isEmpty()) {
-            return -1;
-        } else {
-            return country_List.get(0);
-        }
-    }
-
-    public void createCountry(TextField countryName) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Country country = new Country();
-            country.setCountry(countryName.getText());
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            country.setLastUpdate(timestamp);
-            entityManager.persist(country);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public Short searchCityID(TextField cityName) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        List<Short> city_List = new ArrayList<>(1);
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Query query = entityManager.createNativeQuery("SELECT city_id FROM city WHERE city = " + "'" + cityName.getText() + "'");
-            city_List = query.getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-        if (city_List.isEmpty()) {
-            return -1;
-        } else {
-            return city_List.get(0);
-        }
-    }
-
-    public void createCity(TextField cityName, int countryID) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            City city = new City();
-            city.setCity(cityName.getText());
-            city.setCountry_id(countryID);
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            city.setLastUpdate(timestamp);
-            entityManager.persist(city);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public void addAddress(TextField textFieldAddress, TextField textFieldAddress2, TextField textFieldPostalCode, TextField textFieldDistrict, TextField textFieldPhone, int cityID) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Address address = new Address();
-            address.setAddress(textFieldAddress.getText());
-            address.setAddress2(textFieldAddress2.getText());
-            address.setPostal_code(textFieldPostalCode.getText());
-            address.setDistrict(textFieldDistrict.getText());
-            address.setCity_id(cityID);
-            address.setPhone(textFieldPhone.getText());
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            address.setLast_update(timestamp);
-            entityManager.persist(address);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public int searchAddressID() {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        List<Short> address_idList = new ArrayList<>(1);
-        short addressID;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Query query = entityManager.createNativeQuery("SELECT address_id FROM address ORDER BY last_update DESC LIMIT 1");
-
-            address_idList = query.getResultList();
-            addressID = address_idList.get(0);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-        return address_idList.get(0).intValue();
-    }
-
-    public void addCustomer(TextField textFieldStoreID, TextField textFieldFirstName, TextField textFieldLastName, TextField textFieldEmail, int addressID) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Customer customer = new Customer();
-            customer.setStoreId(Integer.parseInt(textFieldStoreID.getText()));
-            customer.setFirstName(textFieldFirstName.getText());
-            customer.setLastName(textFieldLastName.getText());
-            customer.setEmail(textFieldEmail.getText());
-            customer.setAddressId(1);
-            customer.setActive(1);
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            customer.setCreateDate(timestamp);
-            customer.setLastUpdate((timestamp));
-            customer.setAddressId(addressID);
-            entityManager.persist(customer);
-            transaction.commit();
-
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public ObservableList<TextFieldResult> searchFromCustomer(TextField textFieldSearchField) {
-        ObservableList<TextFieldResult> data = FXCollections.observableArrayList();
-       data = this.searchCustomer(textFieldSearchField);
-       return data;
-    }
-
-    public void deleteFromCustomer(int customerID, HBox hBoxInfoBannerCanNotDelete, Label labelInfoBannerCanNotDelete) {
-        this.deleteCustomer(customerID, hBoxInfoBannerCanNotDelete, labelInfoBannerCanNotDelete);
-    }
-
 }
 
 

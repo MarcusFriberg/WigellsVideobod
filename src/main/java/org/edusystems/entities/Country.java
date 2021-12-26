@@ -8,10 +8,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "country")
 public class Country {
+    //Enteties
     @Id
     @Column(name = "country_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int countryId;
+    private Short countryId;
 
     @Column(name = "country")
     private String country;
@@ -19,6 +20,7 @@ public class Country {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
+    //Constructors
     public Country() {
     }
 
@@ -32,7 +34,7 @@ public class Country {
     }
 
     //Getters
-    public int getCountryId() {
+    public Short getCountryId() {
         return countryId;
     }
 

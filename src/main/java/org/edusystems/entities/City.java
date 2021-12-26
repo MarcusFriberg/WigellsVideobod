@@ -11,14 +11,13 @@ public class City {
     @Id
     @Column(name = "city_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cityId;
+    private Short cityId;
 
     @Column(name = "city")
     private String city;
 
     @Column(name = "country_id")
-    private int country_id;
-
+    private Short country_id;
 
     @Column(name = "last_update")
     private Timestamp lastUpdate;
@@ -26,7 +25,8 @@ public class City {
     public City() {
     }
 
-    public City(String city, int country) {
+    //Constructor
+    public City(String city, Short country) {
         this.city = city;
         this.country_id = country;
     }
@@ -36,12 +36,12 @@ public class City {
         this.city = city;
     }
 
-    public void setCountry_id(int country) {
+    public void setCountry_id(Short country_id) {
         this.country_id = country_id;
     }
 
     //Getters
-    public int getCityId() {
+    public Short getCityId() {
         return cityId;
     }
 
@@ -49,7 +49,7 @@ public class City {
         return city;
     }
 
-    public int getCountry_id() {
+    public Short getCountry_id() {
         return country_id;
     }
 

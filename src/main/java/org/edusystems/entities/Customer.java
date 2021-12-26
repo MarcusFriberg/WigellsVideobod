@@ -9,14 +9,15 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 public class Customer {
-    // Variables
+
+    // Enteties
     @Id
     @Column(name = "customer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int customerId;
+    private Short customerId;
 
     @Column(name = "store_id")
-    private int storeId;
+    private Short storeId;
 
     @Column(name = "first_name")
     private String firstName;
@@ -28,7 +29,7 @@ public class Customer {
     private String email;
 
     @Column(name = "address_id")
-    private int addressId;
+    private Short addressId;
 
     @Column(name = "active")
     private int active;
@@ -39,10 +40,10 @@ public class Customer {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
+    //Constructors
     public Customer() {
     }
-
-    public Customer(int storeId, String firstName, String lastName, String email, int addressId, int active) {
+    public Customer(Short storeId, String firstName, String lastName, String email, Short addressId, int active) {
         this.storeId = storeId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,7 +53,7 @@ public class Customer {
     }
 
     //Setters
-    public void setStoreId(int storeId) {
+    public void setStoreId(Short storeId) {
         this.storeId = storeId;
     }
 
@@ -68,7 +69,7 @@ public class Customer {
         this.email = email;
     }
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(Short addressId) {
         this.addressId = addressId;
     }
 
@@ -77,11 +78,11 @@ public class Customer {
     }
 
     //Getters
-    public int getCustomerId() {
+    public Short getCustomerId() {
         return customerId;
     }
 
-    public int getStoreId() {
+    public Short getStoreId() {
         return storeId;
     }
 
@@ -97,7 +98,7 @@ public class Customer {
         return email;
     }
 
-    public int getAddressId() {
+    public Short getAddressId() {
         return addressId;
     }
 
