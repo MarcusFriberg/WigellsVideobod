@@ -2,7 +2,15 @@ package org.edusystems.entities;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+/*
+ * Class Payment
+ * Class that can be used to create payment-objects from, with entites from Hibernate.
+ * @author: Matilda Wintence
+ * @author: matilda.wintence@edu.edugrade.se
+ * @version: 1.0.
+ */
 
+// Entities
 @Entity
 @Table(name = "payment")
 public class Payment {
@@ -29,9 +37,11 @@ public class Payment {
     @Column(name = "last_update")
     Timestamp lastUpdate;
 
+    // Empty constructor
     public Payment() {
     }
 
+    // Constructor
     public Payment(int customerId, int staffId, int rentalId, double amount, Timestamp paymentDate) {
         this.customerId = customerId;
         this.staffId = staffId;
@@ -39,7 +49,7 @@ public class Payment {
         this.amount = amount;
         this.paymentDate = paymentDate;
     }
-
+    // Setters
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
@@ -56,6 +66,7 @@ public class Payment {
         this.amount = amount;
     }
 
+    // Getters
     public int getPaymentId() {
         return paymentId;
     }

@@ -5,21 +5,19 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /*
- * Class Language
- * Class that can be used to create language-objects from, with entites from Hibernate.
+ * Class Category
+ * Class that can be used to create category-objects from, with entites from Hibernate.
  * @author: Matilda Wintence
  * @author: matilda.wintence@edu.edugrade.se
  * @version: 1.0.
  */
-
-// Entities
 @Entity
-@Table(name = "language")
-public class Language {
+@Table(name = "category")
+public class Category {
     @Id
-    @Column(name = "language_id")
+    @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int languageId;
+    private int categoryId;
 
     @Column(name = "name")
     private String name;
@@ -27,21 +25,21 @@ public class Language {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    // Constructor
-    public Language(String name) {
-        this.name = name;
-    }
-    public Language() {
+    public Category() {
     }
 
-    // Setters
+    //Constructor
+    public Category(String name) {
+        this.name = name;
+    }
+
+    //Setters
     public void setName(String name) {
         this.name = name;
     }
 
-    // Getters
-    public int getLanguageId() {
-        return languageId;
+    public int getCategoryId() {
+        return categoryId;
     }
 
     public String getName() {
@@ -52,4 +50,7 @@ public class Language {
         return lastUpdate;
     }
 }
+
+
+
 

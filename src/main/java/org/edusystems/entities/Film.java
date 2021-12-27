@@ -1,9 +1,20 @@
 package org.edusystems.entities;
 
+// Imports
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
+/*
+ * Class Film
+ * Class that can be used to create film-objects from, with entites from Hibernate.
+ * @author: Matilda Wintence
+ * @author: matilda.wintence@edu.edugrade.se
+ * @version: 1.0.
+ */
+
+// Entities
 @Entity
 @Table(name = "film")
 public class Film implements Serializable {
@@ -50,7 +61,7 @@ public class Film implements Serializable {
     //Detta är ett set
 
     @Column(name = "last_update")
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     // Constructor
     public Film() {
