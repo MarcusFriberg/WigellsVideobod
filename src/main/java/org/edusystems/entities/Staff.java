@@ -1,11 +1,22 @@
 package org.edusystems.entities;
-
+// Imports
 import javax.persistence.*;
 import java.sql.Date;
 
+/*
+ * Class Staff
+ * Class that can be used to create Staff-objects that maps to the staff table
+ * in the sakilda database.
+ * @author: Linda Djurström
+ * @author: linda.djurstrom@edu.edugrade.se
+ * @author: Marcus Friberg
+ * @author: marcus.friberg@edu.edugrade.se
+ * @version: 1.1
+ */
 @Entity
-@Table(name = "staff")
+@Table(name = "staff", schema = "sakila")
 public class Staff {
+    // Variables
     @Id
     @Column(name = "staff_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +52,11 @@ public class Staff {
     @Column(name = "last_update")
     private Date lastUpdate;
 
+    // Constructors
+    public Staff() {
+
+    }
+
     public Staff(String firstName, String lastName, int addressId, byte[] picture, String eMail, int storeId, int active, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -51,10 +67,6 @@ public class Staff {
         this.active = active;
         this.username = username;
         this.password = password;
-    }
-
-    public Staff() {
-
     }
 
 

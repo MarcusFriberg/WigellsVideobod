@@ -1,26 +1,39 @@
 package org.edusystems.view;
 // Imports
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.edusystems.controller.OrderViewController;
 import org.edusystems.entities.Rental;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class OrderView {
     // Variables
     private MainView mainView;
     private OrderViewController orderViewController;
+    private ObservableList<Rental> rentalsObservableList;
+    private FilteredList<Rental> rentalsFilteredList;
+    private SortedList<Rental> sortedRentalsList;
 
     // Constructor
     public OrderView(MainView mainView) {
         this.mainView = mainView;
         orderViewController = new OrderViewController(this, mainView.getViewController());
+        rentalsObservableList = orderViewController.getAllRentals();
+        rentalsFilteredList = new FilteredList<>(rentalsObservableList, p -> true);
+        sortedRentalsList = new SortedList<>(rentalsFilteredList);
     }
 
     /*
@@ -58,18 +71,69 @@ public class OrderView {
         addOrderVBox.setOnMouseClicked(event -> {
             // Code to open window to add new order
         });
-
+        // Search
+        Label filterLabel = new Label("Filter search results: ");
+        filterLabel.setPrefSize(650,20);
+        filterLabel.setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 10");
+        filterLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        TextField filterTextField = new TextField();
+        filterTextField.setPromptText("filter search results...");
+        filterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            rentalsFilteredList.setPredicate(rental -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String textToFilterOn = newValue.toLowerCase();
+                if (rental.getCustomerName().toLowerCase().contains(textToFilterOn)) {
+                    return true;
+                } else if (rental.getFilmTitle().toLowerCase().contains(textToFilterOn)) {
+                    return true;
+                }
+                return false;
+            });
+        });
         // HBox to hold buttons above the table
         HBox topButtonRow = new HBox();
-        topButtonRow.getChildren().add(addOrderVBox);
+        topButtonRow.getChildren().addAll(addOrderVBox, filterLabel,filterTextField);
         topButtonRow.setPadding(new Insets(20, 0, 10, 0));
 
+        // Table columns
+        // #1 rentalID
+        TableColumn<Rental, Short> rentalIdColumn = new TableColumn<>("Order ID");
+        rentalIdColumn.setMinWidth(80);
+        rentalIdColumn.setCellValueFactory(new PropertyValueFactory<>("rentalId"));
+        // #2 rentalDate
+        TableColumn<Rental, Date> rentalDateColumn = new TableColumn<>("Rented");
+        rentalDateColumn.setMinWidth(80);
+        rentalDateColumn.setCellValueFactory(new PropertyValueFactory<>("rentalDate"));
+        // #3 inventoryId - filmTitle is not a property of Rental entity but is reached by the custom getter.
+        TableColumn<Rental, String> filmTitleColumn = new TableColumn<>("Film");
+        filmTitleColumn.setMinWidth(80);
+        filmTitleColumn.setCellValueFactory(new PropertyValueFactory<>("filmTitle"));
+        // #4 customerId - customerName is not a property of Rental entity but is reached by the custom getter.
+        TableColumn<Rental, String> customerNameColumn = new TableColumn<>("Customer");
+        customerNameColumn.setMinWidth(80);
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        // #5 returnDate
+        TableColumn<Rental, Timestamp> returnDateColumn = new TableColumn<>("Return Date");
+        returnDateColumn.setMinWidth(80);
+        returnDateColumn.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        // #6 staffId
+        TableColumn<Rental, Short> staffIdColumn = new TableColumn<>("Staff Id");
+        staffIdColumn.setMinWidth(80);
+        staffIdColumn.setCellValueFactory(new PropertyValueFactory<>("staffId"));
+        // #7 lastUpdate
+        TableColumn<Rental, Timestamp> lastUpdateColumn = new TableColumn<>("Last Update");
+        lastUpdateColumn.setMinWidth(80);
+        lastUpdateColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
         // Table to show all orders
-        TableView<Rental> ordersTable = new TableView<Rental>();
-
+        TableView<Rental> rentalsTable = new TableView<Rental>();
+        rentalsTable.getColumns().addAll(rentalIdColumn,rentalDateColumn, filmTitleColumn, customerNameColumn, returnDateColumn, staffIdColumn, lastUpdateColumn);
+        sortedRentalsList.comparatorProperty().bind(rentalsTable.comparatorProperty());
+        rentalsTable.setItems(sortedRentalsList);
         // VBox to hold all the content on the Order page
         VBox content = new VBox();
-        content.getChildren().addAll(pageTitle, topButtonRow);
+        content.getChildren().addAll(pageTitle, topButtonRow, rentalsTable);
         return content;
     }
 }

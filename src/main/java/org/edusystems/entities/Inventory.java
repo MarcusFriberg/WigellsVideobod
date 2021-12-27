@@ -1,7 +1,7 @@
 package org.edusystems.entities;
 // Imports
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "inventory")
@@ -11,30 +11,32 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int inventoryId;
 
-    @Column(name = "film_id")
-    private int filmId;
+    @ManyToOne
+    @JoinColumn(name = "film_id")
+    private Film inventoryFilm;
 
-    @Column(name = "store_id")
-    private int storeId;
+    @ManyToOne
+    @JoinColumn(name ="store_id")
+    private Store inventoryStore;
 
     @Column(name = "last_update")
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
-    public Inventory(int filmId, int storeId) {
-        this.filmId = filmId;
-        this.storeId = storeId;
+    public Inventory(Film inventoryFilm, Store inventoryStore) {
+        this.inventoryFilm = inventoryFilm;
+        this.inventoryStore = inventoryStore;
     }
 
     public Inventory() {
     }
 
     //Setters
-    public void setFilmId(int filmId) {
-        this.filmId = filmId;
+    public void setInventoryFilm(Film inventoryFilm) {
+        this.inventoryFilm = inventoryFilm;
     }
 
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
+    public void setInventoryStore(Store inventoryStore) {
+        this.inventoryStore = inventoryStore;
     }
 
     //Getters
@@ -42,15 +44,15 @@ public class Inventory {
         return inventoryId;
     }
 
-    public int getFilmId() {
-        return filmId;
-    }
-
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
+    }
+
+    public Film getInventoryFilm() {
+        return inventoryFilm;
+    }
+
+    public Store getInventoryStore() {
+        return inventoryStore;
     }
 }
