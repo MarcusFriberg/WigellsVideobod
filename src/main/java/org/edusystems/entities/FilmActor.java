@@ -1,9 +1,18 @@
 package org.edusystems.entities;
 
+// Imports
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
+/*
+ * Class FilmActor
+ * Class that can be used to create filmActor-objects from, with entites from Hibernate.
+ * @author: Matilda Wintence
+ * @author: matilda.wintence@edu.edugrade.se
+ * @version: 1.0.
+ */
+
+// Entities
 @Entity
 @Table(name = "film_actor")
 public class FilmActor {
@@ -17,10 +26,10 @@ public class FilmActor {
     @Column (name = "last_update")
     private Timestamp lastUpdate;
 
-    // Constructor
+    // empty constructor
     public FilmActor() {
     }
-
+    // Constructor
     public FilmActor(int actorId, int filmId) {
         this.actorId = actorId;
         this.filmId = filmId;
