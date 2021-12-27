@@ -1,5 +1,5 @@
 package org.edusystems.entities;
-
+// Imports
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,78 +12,99 @@ import java.sql.Timestamp;
  * Class that can be used to create rental-objects from. With entites from Hibernate.
  * @author: Linda Djurström
  * @author: linda.djurstrom@edu.edugrade.se
- * @version: 1.0.
+ * @author: Marcus Friberg
+ * @author: marcus.friberg@edu.edugrade.se
+ * @version: 1.1
  */
-//Enteties
 @Entity
 @Table(name = "rental")
 public class Rental {
+    // Variables
     @Id
     @Column(name = "rental_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short rental_id;
+    private Short rentalId;
 
     @Column(name = "rental_date")
-    private Timestamp rental_date;
+    private Date rentalDate;
 
-    @Column(name = "inventory_id")
-    private Short inventory_id;
+    @ManyToOne
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventoryItem;
 
-    @Column(name = "customer_id")
-    private Short customer_id;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @Column(name = "return_date")
-    private Timestamp return_date;
+    private Timestamp returnDate;
 
     @Column(name = "staff_id")
-    private Short staff_id;
+    private Short staffId;
 
     @Column(name = "last_update")
-    private Timestamp last_update;
+    private Timestamp lastUpdate;
+
+
 
     //Constructor
-    public Rental(Timestamp rental_date, Short inventory_id, Short customer_id, Timestamp return_date, Short staff_id) {
-        this.rental_date = rental_date;
-        this.inventory_id = inventory_id;
-        this.customer_id = customer_id;
-        this.return_date = return_date;
-        this.staff_id = staff_id;
+    public Rental(Date rental_date, Inventory inventoryItem, Customer customer, Timestamp return_date, Short staff_id) {
+        this.rentalDate = rental_date;
+        this.inventoryItem = inventoryItem;
+        this.customer = customer;
+        this.returnDate = return_date;
+        this.staffId = staff_id;
     }
 
     public Rental() {
     }
 
     //Setters
-    public void setRental_date(Timestamp rental_date) {
-        this.rental_date = rental_date;
+    public void setRentalDate(Date rental_date) {
+        this.rentalDate = rental_date;
     }
-    public void setInventory_id(Short inventory_id) {
-        this.inventory_id = inventory_id;
+    public void setReturnDate(Timestamp return_date) {
+        this.returnDate = return_date;
     }
-    public void setCustomer_id(Short customer_id) {
-        this.customer_id = customer_id;
+    public void setStaffId(Short staff_id) {
+        this.staffId = staff_id;
     }
-    public void setReturn_date(Timestamp return_date) {
-        this.return_date = return_date;
+    public void setInventoryItem(Inventory inventoryItem) {
+        this.inventoryItem = inventoryItem;
     }
-    public void setStaff_id(Short staff_id) {
-        this.staff_id = staff_id;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    //Getter
-    public Timestamp getRental_date() {
-        return rental_date;
+    //Getters
+    public Short getRentalId() {
+        return rentalId;
     }
-    public Short getInventory_id() {
-        return inventory_id;
+    public Date getRentalDate() {
+        return rentalDate;
     }
-    public Short getCustomer_id() {
-        return customer_id;
+    public Inventory getInventoryItem() {
+        return inventoryItem;
     }
-    public Timestamp getReturn_date() {
-        return return_date;
+    public Customer getCustomer() {
+        return customer;
     }
-    public Short getStaff_id() {
-        return staff_id;
+    public Timestamp getReturnDate() {
+        return returnDate;
     }
+    public Short getStaffId() {
+        return staffId;
+    }
+    public Timestamp getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public String getCustomerName() {
+        return customer.getFirstName() + " " + customer.getLastName();
+    }
+
+    public String getFilmTitle() {
+        return inventoryItem.getInventoryFilm().getTitle();
+    }
+
 }

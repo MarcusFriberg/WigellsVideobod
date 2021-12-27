@@ -1,10 +1,8 @@
 package org.edusystems.entities;
 // Imports
-import javafx.scene.control.TextField;
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Table(name = "customer")
