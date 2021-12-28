@@ -1,14 +1,11 @@
 package org.edusystems.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
-import org.edusystems.entities.Address;
-import org.edusystems.entities.City;
-import org.edusystems.entities.Country;
-import org.edusystems.entities.Customer;
+import org.edusystems.entities.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +19,90 @@ import static org.edusystems.Main.ENTITY_MANAGER_FACTORY;
  * @version: 1.0.
  */
 public class CreateCustomerViewController {
+    public static EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("hibernate");
     //Constructor
     CustomerViewController customerViewController;
     public CreateCustomerViewController(CustomerViewController customerViewController) {
         this.customerViewController = customerViewController;
+    }
+
+    public Customer getCustomer(int customerID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Customer customer = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+                    customer = entityManager.getReference(Customer.class, Short.parseShort(String.valueOf(customerID)));
+            } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return customer;
+    }
+
+
+    public static Address getAddress(Short addressID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Address address = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            address = entityManager.getReference(Address.class, addressID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return address;
+    }
+
+    public static City getCity(Short cityID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        City city = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            city = entityManager.getReference(City.class, cityID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return city;
+    }
+
+    public static Country getCountry(Short countryID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Country country = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            country = entityManager.getReference(Country.class, countryID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return country;
     }
 
     /*

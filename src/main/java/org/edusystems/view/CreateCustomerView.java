@@ -14,6 +14,10 @@ import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import org.edusystems.controller.CreateCustomerViewController;
 import org.edusystems.controller.CustomerViewController;
+import org.edusystems.entities.Address;
+import org.edusystems.entities.City;
+import org.edusystems.entities.Country;
+import org.edusystems.entities.Customer;
 
 /*
  * Class CreateCustomerView
@@ -49,7 +53,7 @@ public class CreateCustomerView {
     Label labelCity = new Label("City");
     Label labelCountry = new Label("Country");
     Label labelPhone = new Label("Phone");
-    Button bCreate = new Button("Create");
+    Button bCreateUpdate = new Button("Create");
     HBox hBoxStoreID = new HBox();
     HBox hBoxFirstName = new HBox();
     HBox hBoxLastName = new HBox();
@@ -76,15 +80,38 @@ public class CreateCustomerView {
     }
 
     public void update(int customerID) {
+        stage.setTitle("Update customer");
+        bCreateUpdate.setText("Update");
         if(!graphicsCreated) {
             createView();
         }
+
+        Customer customer = createCustomerViewController.getCustomer(customerID);
+        System.out.println(customer.getFirstName());
+        Address address = createCustomerViewController.getAddress(customer.getAddressId());
+        City city = createCustomerViewController.getCity(address.getCity_id());
+        Country country = createCustomerViewController.getCountry(city.getCountry_id());
+        textFieldStoreID.setText(customer.getStoreId().toString());
+        textFieldFirstName.setText(customer.getFirstName());
+        textFieldLastName.setText(customer.getLastName());
+        textFieldEmail.setText(customer.getEmail());
+        textFieldAddress.setText(address.getAddress());
+        textFieldAddress2.setText(address.getAddress2());
+        textFieldPostalCode.setText(address.getPostal_code());
+        textFieldDistrict.setText(address.getDistrict());
+        textFieldCity.setText(city.getCity());
+        textFieldCountry.setText(country.getCountry());
+        textFieldPhone.setText(address.getPhone());
+
         borderPane.setCenter(vBoxCreateCustomer);
         stage.setScene(scene);
         stage.show();
     }
 
+
     public void create() {
+        stage.setTitle("Create customer");
+        bCreateUpdate.setText("Create");
         if(!graphicsCreated) {
             createView();
         }
@@ -93,7 +120,7 @@ public class CreateCustomerView {
         stage.show();
 
         //A lambda function for the button bCreate.
-        bCreate.setOnAction(event -> {
+        bCreateUpdate.setOnAction(event -> {
             /*Takes the Textfield the user has filled in for country, sends it in to a method in createCustomerViewController,
              stores the returned value in a short-variabel.
              */
@@ -196,7 +223,7 @@ public class CreateCustomerView {
         hBoxCountry.setAlignment(Pos.BASELINE_CENTER);
         hBoxPhone.getChildren().addAll(labelPhone, textFieldPhone);
         hBoxPhone.setAlignment(Pos.BASELINE_CENTER);
-        hBoxButtonsCreate.getChildren().addAll(bCreate);
+        hBoxButtonsCreate.getChildren().addAll(bCreateUpdate);
         hBoxButtonsCreate.setAlignment(Pos.BASELINE_RIGHT);
         hBoxButtonsCreate.setPadding(new Insets(0, 60, 0, 0));
         textFieldStoreID.setText("1");
