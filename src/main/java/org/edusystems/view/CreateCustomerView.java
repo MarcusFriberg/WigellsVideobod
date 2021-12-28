@@ -14,7 +14,6 @@ import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import org.edusystems.controller.CreateCustomerViewController;
 import org.edusystems.controller.CustomerViewController;
-import org.edusystems.controller.ViewController;
 
 /*
  * Class CreateCustomerView
@@ -68,6 +67,7 @@ public class CreateCustomerView {
     BorderPane borderPane = new BorderPane();
     Stage stage = new Stage();
     Scene scene = new Scene(borderPane, 400, 450);
+    boolean graphicsCreated = false;
 
     //Constructor
     public CreateCustomerView(CustomerViewController customerViewController) {
@@ -75,24 +75,88 @@ public class CreateCustomerView {
         createCustomerViewController = new CreateCustomerViewController(customerViewController);
     }
 
+    public void update(int customerID) {
+        if(!graphicsCreated) {
+            createView();
+        }
+        borderPane.setCenter(vBoxCreateCustomer);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void create() {
+        if(!graphicsCreated) {
+            createView();
+        }
+        borderPane.setCenter(vBoxCreateCustomer);
+        stage.setScene(scene);
+        stage.show();
+
+        //A lambda function for the button bCreate.
+        bCreate.setOnAction(event -> {
+            /*Takes the Textfield the user has filled in for country, sends it in to a method in createCustomerViewController,
+             stores the returned value in a short-variabel.
+             */
+            Short countryID = createCustomerViewController.searchCountryID(textFieldCountry);
+            /*If there is no country-match in the method above the return value is -1, and it enters the if-sats.
+            A new method in createCustomerViewController is called upon, the method creates a new country with the value from
+            textFieldCountry.
+             */
+            if(countryID < 0) {
+                createCustomerViewController.createCountry(textFieldCountry);
+                //When a new country is created a new attempt to grab the new countryID is made.
+                countryID = createCustomerViewController.searchCountryID(textFieldCountry);
+            }
+            /*When the country is made it uses the countryID and textFieldCity(that the user has added) in a new method to search
+            if the city already exist in the database.
+             */
+            Short cityID = createCustomerViewController.searchCityID(textFieldCity, countryID);
+            //If it doesnt exist the return value is -1 and we enter the if-sats down under.
+            if(cityID < 0) {
+                /*Calls upon a method to create a new city in createCustomerViewController. The countryID required for the table city is
+                sent in, from the Short-variable cityID.
+                 */
+                createCustomerViewController.createCity(textFieldCity, countryID);
+                //Grabs the newly made cityID.
+                cityID = createCustomerViewController.searchCityID(textFieldCity,countryID);
+            }
+
+            //Calls upon a method to create a new address with the cityID-value grabbed above.
+            createCustomerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
+            //Grabs the addressID from the newly created address.
+            int addressID = createCustomerViewController.searchAddressID();
+
+            //Creates a new customer with the values the user has added in the textfields and the newly created addressID.
+            createCustomerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
+
+            //Clears all the textfields.
+            clearTextFields();
+        });
+    }
+
+    public void clearTextFields() {
+        //Clears all the textfields.
+        textFieldAddress.clear();
+        textFieldAddress2.clear();
+        textFieldPostalCode.clear();
+        textFieldDistrict.clear();
+        textFieldCity.clear();
+        textFieldCountry.clear();
+        textFieldPhone.clear();
+        textFieldFirstName.clear();
+        textFieldLastName.clear();
+        textFieldEmail.clear();
+    }
+
     /*
-     * Method createUpdateView
+     * Method createView
      * Creates the graphics for the window and initiates it.
      * @params: takes a string-value that determines if the window should create a new customer or update an already exsisting customer.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
      */
-    public void createUpdateView(String createUpdate) {
-        //The value in createUpdate-stringparameter determines the Title for the stage.
-        switch (createUpdate) {
-            case "create":
-                stage.setTitle("Create customer");
-                break;
-            case "update":
-                stage.setTitle("Create customer");
-        }
-
+    public void createView() {
         //Editing the variables, adding children and sets the stage.
         textFieldStoreID.setText("1");
         textFieldStoreID.setFont(Font.font(null, FontPosture.ITALIC, 15));
@@ -152,58 +216,6 @@ public class CreateCustomerView {
         vBoxCreateCustomer.getChildren().addAll(hBoxAddCustomer, hBoxStoreID, hBoxFirstName, hBoxLastName, hBoxEmail,
                 hBoxAddress, hBoxAddress2, hBoxPostalCode, hBoxDistrict, hBoxCity, hBoxCountry, hBoxPhone, hBoxButtonsCreate);
         vBoxCreateCustomer.setPadding(new Insets(50,0 , 0, 0));
-        borderPane.setCenter(vBoxCreateCustomer);
-        stage.setScene(scene);
-        stage.show();
-
-        //A lambda function for the button bCreate.
-        bCreate.setOnAction(event -> {
-            /*Takes the Textfield the user has filled in for country, sends it in to a method in createCustomerViewController,
-             stores the returned value in a short-variabel.
-             */
-            Short countryID = createCustomerViewController.searchCountryID(textFieldCountry);
-            /*If there is no country-match in the method above the return value is -1, and it enters the if-sats.
-            A new method in createCustomerViewController is called upon, the method creates a new country with the value from
-            textFieldCountry.
-             */
-            if(countryID < 0) {
-                createCustomerViewController.createCountry(textFieldCountry);
-                //When a new country is created a new attempt to grab the new countryID is made.
-                countryID = createCustomerViewController.searchCountryID(textFieldCountry);
-            }
-            /*When the country is made it uses the countryID and textFieldCity(that the user has added) in a new method to search
-            if the city already exist in the database.
-             */
-            Short cityID = createCustomerViewController.searchCityID(textFieldCity, countryID);
-            //If it doesnt exist the return value is -1 and we enter the if-sats down under.
-            if(cityID < 0) {
-                /*Calls upon a method to create a new city in createCustomerViewController. The countryID required for the table city is
-                sent in, from the Short-variable cityID.
-                 */
-                createCustomerViewController.createCity(textFieldCity, countryID);
-                //Grabs the newly made cityID.
-                cityID = createCustomerViewController.searchCityID(textFieldCity,countryID);
-            }
-
-            //Calls upon a method to create a new address with the cityID-value grabbed above.
-            createCustomerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
-            //Grabs the addressID from the newly created address.
-            int addressID = createCustomerViewController.searchAddressID();
-
-            //Creates a new customer with the values the user has added in the textfields and the newly created addressID.
-            createCustomerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
-
-            //Clears all the textfields.
-            textFieldAddress.clear();
-            textFieldAddress2.clear();
-            textFieldPostalCode.clear();
-            textFieldDistrict.clear();
-            textFieldCity.clear();
-            textFieldCountry.clear();
-            textFieldPhone.clear();
-            textFieldFirstName.clear();
-            textFieldLastName.clear();
-            textFieldEmail.clear();
-        });
+        graphicsCreated = true;
     }
 }

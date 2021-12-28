@@ -27,6 +27,7 @@ import org.edusystems.entities.TextFieldResult;
 public class CustomerView {
     // Variables
     private CustomerViewController customerViewController;
+    CreateCustomerView createCustomerView = new CreateCustomerView(customerViewController);
     private MainView mainView;
     ObservableList<TextFieldResult> data = FXCollections.observableArrayList();
     TextField textFieldSearchField = new TextField();
@@ -44,7 +45,7 @@ public class CustomerView {
     TableColumn countryCol = new TableColumn("Country");
     TableColumn phoneCol = new TableColumn("Phone");
     Button bSearch = new Button("Search");
-    Button bUpdate2 = new Button("Update");
+    Button bUpdate = new Button("Update");
     Button bDelete = new Button("Delete");
     Button bCreate = new Button("Create customer");
     Label labelInfoBannerCanNotDelete = new Label("This customer can't be deleted, make sure that the customer \n has returned " +
@@ -56,6 +57,7 @@ public class CustomerView {
     HBox hBoxChange = new HBox();
     VBox vBoxSearch = new VBox();
     VBox content = new VBox();
+    boolean graphicsCreated = false;
 
     // Constructor
     public CustomerView(MainView mainView) {
@@ -63,16 +65,7 @@ public class CustomerView {
         customerViewController = new CustomerViewController(this, mainView.getViewController());
     }
 
-    /*
-     * Method getContent
-     * A method to return content of the HomeView to the caller.
-     * @author: Marcus Friberg
-     * @author: Linda Djurström
-     * @author: marcus.friberg@edu.edugrade.se
-     * @author: linda.djurstrom@edu.edugrade.se
-     * @version: 1.0
-     */
-    public VBox getContent() {
+    public void createGraphics() {
         //Setting graphics for components created earlier. Adding children to Hbox/vbox.
         textFieldSearchField.setPromptText("Search...");
         textFieldSearchField.setMinWidth(600);
@@ -104,15 +97,13 @@ public class CustomerView {
         hBoxResultsField.getChildren().addAll(tableViewResultArea);
         hBoxResultsField.setAlignment(Pos.BASELINE_CENTER);
         hBoxResultsField.setPadding(new Insets(5, 0, 5, 50));
-        hBoxChange.getChildren().addAll(bCreate, bUpdate2, bDelete);
+        hBoxChange.getChildren().addAll(bCreate, bUpdate, bDelete);
         hBoxChange.setAlignment(Pos.BASELINE_RIGHT);
         hBoxChange.setPadding(new Insets(5, 0, 5, 0));
         hBoxInfoBannerCanNotDelete.getChildren().addAll(labelInfoBannerCanNotDelete);
         hBoxInfoBannerCanNotDelete.setVisible(false);
         hBoxInfoBannerCanNotDelete.setPadding(new Insets(0, 0, 0, 50));
         vBoxSearch.getChildren().addAll(hBoxSearchField, hBoxSearchSettings, hBoxResultsField, hBoxChange, hBoxInfoBannerCanNotDelete);
-        content.getChildren().add(vBoxSearch);
-
         //Adding the columns to the tableview.
         tableViewResultArea.getColumns().addAll(storeIDCol, customerIDCol, firstNameCol, lastNameCol, emailCol, addressCol, address2Col,
                 postalCodeCol, districtCol, cityCol, countryCol, phoneCol);
@@ -128,7 +119,6 @@ public class CustomerView {
         );
         firstNameCol.setCellValueFactory(
                 new PropertyValueFactory<TextFieldResult, String>("firstName")
-
         );
         lastNameCol.setCellValueFactory(
                 new PropertyValueFactory<TextFieldResult, String>("lastName")
@@ -141,7 +131,6 @@ public class CustomerView {
         );
         address2Col.setCellValueFactory(
                 new PropertyValueFactory<TextFieldResult, String>("address2")
-
         );
         postalCodeCol.setCellValueFactory(
                 new PropertyValueFactory<TextFieldResult, String>("postalCode")
@@ -158,6 +147,24 @@ public class CustomerView {
         phoneCol.setCellValueFactory(
                 new PropertyValueFactory<TextFieldResult, String>("phone")
         );
+        content.getChildren().addAll(vBoxSearch);
+        graphicsCreated = true;
+    }
+
+
+    /*
+     * Method getContent
+     * A method to return content of the HomeView to the caller.
+     * @author: Marcus Friberg
+     * @author: Linda Djurström
+     * @author: marcus.friberg@edu.edugrade.se
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public VBox getContent() {
+        if(!graphicsCreated) {
+            createGraphics();
+        }
 
         //Function for click on searchbutton.
         bSearch.setOnAction(event -> {
@@ -187,18 +194,18 @@ public class CustomerView {
             hBoxInfoBannerCanNotDelete.setVisible(false);
 
             //Grabs the index-value from the tableview-object clicked on.
-            int customerCopy = tableViewResultArea.getSelectionModel().getSelectedIndex();
+            int customerIndex = tableViewResultArea.getSelectionModel().getSelectedIndex();
             //If there is no value choosen at info-banner shows on the screen. The label turns visible.
-            if(customerCopy < 0)
+            if(customerIndex < 0)
             {
-                labelInfoBannerCanNotDelete.setText("Du måste välja en kund att radera först.");
+                labelInfoBannerCanNotDelete.setText("You need to chose a customer to delete first.");
                 hBoxInfoBannerCanNotDelete.setVisible(true);
             }
 
-            /*If there is an index, the object stored in the data-list is fetched by the customerCopy-value and the customerID
+            /*If there is an index, the object stored in the data-list is fetched by the customerIndex-value and the customerID
             is also fetched in its turn by the object itself.
              */
-            int customerID = data.get(customerCopy).getCustomerID();
+            int customerID = data.get(customerIndex).getCustomerID();
             //A method-call to a function in the customerviewController. CustomerID and the hBox+ label is sent in as parameters to the function.
             customerViewController.deleteCustomer(customerID, hBoxInfoBannerCanNotDelete, labelInfoBannerCanNotDelete);
             //The table updates itself, and removes the deletedcustomer from the view by a method-call to the customerViewControllers function.
@@ -206,13 +213,36 @@ public class CustomerView {
             tableViewResultArea.setItems(data);
         });
 
+
+        //
+        bUpdate.setOnAction(event -> {
+            hBoxInfoBannerCanNotDelete.setVisible(false);
+            int customerIndex = tableViewResultArea.getSelectionModel().getSelectedIndex();
+            if(customerIndex < 0)
+            {
+                labelInfoBannerCanNotDelete.setText("You need to choose a customer to update first.");
+                hBoxInfoBannerCanNotDelete.setVisible(true);
+            }
+
+            /*If there is an index, the object stored in the data-list is fetched by the customerIndex-value and the customerID
+            is also fetched in its turn by the object itself.
+             */
+            int customerID = data.get(customerIndex).getCustomerID();
+
+
+            createCustomerView.update(customerID);
+            data = customerViewController.searchCustomer(textFieldSearchField);
+            tableViewResultArea.setItems(data);
+        } );
+
         //
         bCreate.setOnAction(event -> {
             //Text in hBoxInfoBannerCanNotDelete turns unvisible again.
             hBoxInfoBannerCanNotDelete.setVisible(false);
             //Creates a new view/window for the user to create new customers.
-            CreateCustomerView customerCreateView = new CreateCustomerView(customerViewController);
-            customerCreateView.createUpdateView("create");
+            createCustomerView.create();
+            data = customerViewController.searchCustomer(textFieldSearchField);
+            tableViewResultArea.setItems(data);
         });
 
         //A call to the method in the same class. Enables the tableview to be pre-filled when the user enters the customerview.
