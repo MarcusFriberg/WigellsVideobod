@@ -14,6 +14,10 @@ import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import org.edusystems.controller.CreateCustomerViewController;
 import org.edusystems.controller.CustomerViewController;
+import org.edusystems.entities.Address;
+import org.edusystems.entities.City;
+import org.edusystems.entities.Country;
+import org.edusystems.entities.Customer;
 
 /*
  * Class CreateCustomerView
@@ -49,7 +53,7 @@ public class CreateCustomerView {
     Label labelCity = new Label("City");
     Label labelCountry = new Label("Country");
     Label labelPhone = new Label("Phone");
-    Button bCreate = new Button("Create");
+    Button bCreateUpdate = new Button("Create");
     HBox hBoxStoreID = new HBox();
     HBox hBoxFirstName = new HBox();
     HBox hBoxLastName = new HBox();
@@ -75,16 +79,61 @@ public class CreateCustomerView {
         createCustomerViewController = new CreateCustomerViewController(customerViewController);
     }
 
+    /*
+     * Method update
+     * Graphics for updatewindow.
+     * @params: customerID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void update(int customerID) {
+        stage.setTitle("Update customer");
+        bCreateUpdate.setText("Update");
         if(!graphicsCreated) {
             createView();
         }
+        Customer customer = createCustomerViewController.getCustomer(customerID);
+        Address address = createCustomerViewController.getAddress(customer.getAddressId());
+        City city = createCustomerViewController.getCity(address.getCity_id());
+        Country country = createCustomerViewController.getCountry(city.getCountry_id());
+        textFieldStoreID.setText(customer.getStoreId().toString());
+        textFieldFirstName.setText(customer.getFirstName());
+        textFieldLastName.setText(customer.getLastName());
+        textFieldEmail.setText(customer.getEmail());
+        textFieldAddress.setText(address.getAddress());
+        textFieldAddress2.setText(address.getAddress2());
+        textFieldPostalCode.setText(address.getPostal_code());
+        textFieldDistrict.setText(address.getDistrict());
+        textFieldCity.setText(city.getCity());
+        textFieldCountry.setText(country.getCountry());
+        textFieldPhone.setText(address.getPhone());
+
         borderPane.setCenter(vBoxCreateCustomer);
         stage.setScene(scene);
         stage.show();
+
+        bCreateUpdate.setOnAction(event -> {
+            createCustomerViewController.update(customer, address, textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail,
+                    textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldCity, textFieldCountry, textFieldPhone);
+            clearTextFields();
+        });
+
+        stage.setOnCloseRequest(event -> {
+            clearTextFields();
+        });
     }
 
+    /*
+     * Method create
+     * Graphics for createWindow.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void create() {
+        stage.setTitle("Create customer");
+        bCreateUpdate.setText("Create");
         if(!graphicsCreated) {
             createView();
         }
@@ -93,47 +142,21 @@ public class CreateCustomerView {
         stage.show();
 
         //A lambda function for the button bCreate.
-        bCreate.setOnAction(event -> {
-            /*Takes the Textfield the user has filled in for country, sends it in to a method in createCustomerViewController,
-             stores the returned value in a short-variabel.
-             */
-            Short countryID = createCustomerViewController.searchCountryID(textFieldCountry);
-            /*If there is no country-match in the method above the return value is -1, and it enters the if-sats.
-            A new method in createCustomerViewController is called upon, the method creates a new country with the value from
-            textFieldCountry.
-             */
-            if(countryID < 0) {
-                createCustomerViewController.createCountry(textFieldCountry);
-                //When a new country is created a new attempt to grab the new countryID is made.
-                countryID = createCustomerViewController.searchCountryID(textFieldCountry);
-            }
-            /*When the country is made it uses the countryID and textFieldCity(that the user has added) in a new method to search
-            if the city already exist in the database.
-             */
-            Short cityID = createCustomerViewController.searchCityID(textFieldCity, countryID);
-            //If it doesnt exist the return value is -1 and we enter the if-sats down under.
-            if(cityID < 0) {
-                /*Calls upon a method to create a new city in createCustomerViewController. The countryID required for the table city is
-                sent in, from the Short-variable cityID.
-                 */
-                createCustomerViewController.createCity(textFieldCity, countryID);
-                //Grabs the newly made cityID.
-                cityID = createCustomerViewController.searchCityID(textFieldCity,countryID);
-            }
-
-            //Calls upon a method to create a new address with the cityID-value grabbed above.
-            createCustomerViewController.addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
-            //Grabs the addressID from the newly created address.
-            int addressID = createCustomerViewController.searchAddressID();
-
-            //Creates a new customer with the values the user has added in the textfields and the newly created addressID.
-            createCustomerViewController.addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
-
+        bCreateUpdate.setOnAction(event -> {
+            createCustomerViewController.create(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail,
+                    textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldCity, textFieldCountry, textFieldPhone);
             //Clears all the textfields.
             clearTextFields();
         });
     }
 
+    /*
+     * Method clearTextFields
+     * Clears all textfields.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void clearTextFields() {
         //Clears all the textfields.
         textFieldAddress.clear();
@@ -196,7 +219,7 @@ public class CreateCustomerView {
         hBoxCountry.setAlignment(Pos.BASELINE_CENTER);
         hBoxPhone.getChildren().addAll(labelPhone, textFieldPhone);
         hBoxPhone.setAlignment(Pos.BASELINE_CENTER);
-        hBoxButtonsCreate.getChildren().addAll(bCreate);
+        hBoxButtonsCreate.getChildren().addAll(bCreateUpdate);
         hBoxButtonsCreate.setAlignment(Pos.BASELINE_RIGHT);
         hBoxButtonsCreate.setPadding(new Insets(0, 60, 0, 0));
         textFieldStoreID.setText("1");

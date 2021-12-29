@@ -45,8 +45,8 @@ public class CustomerView {
     TableColumn countryCol = new TableColumn("Country");
     TableColumn phoneCol = new TableColumn("Phone");
     Button bSearch = new Button("Search");
-    Button bUpdate = new Button("Update");
-    Button bDelete = new Button("Delete");
+    Button bUpdate = new Button("Update customer");
+    Button bDelete = new Button("Delete customer");
     Button bCreate = new Button("Create customer");
     Label labelInfoBannerCanNotDelete = new Label("This customer can't be deleted, make sure that the customer \n has returned " +
             "all the rentals and payed all the fees.");
@@ -65,6 +65,14 @@ public class CustomerView {
         customerViewController = new CustomerViewController(this, mainView.getViewController());
     }
 
+    /*
+     * Method createGraphics
+     * Graphics for customerView.
+     * @params: customerID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void createGraphics() {
         //Setting graphics for components created earlier. Adding children to Hbox/vbox.
         textFieldSearchField.setPromptText("Search...");
@@ -151,7 +159,6 @@ public class CustomerView {
         graphicsCreated = true;
     }
 
-
     /*
      * Method getContent
      * A method to return content of the HomeView to the caller.
@@ -213,8 +220,6 @@ public class CustomerView {
             tableViewResultArea.setItems(data);
         });
 
-
-        //
         bUpdate.setOnAction(event -> {
             hBoxInfoBannerCanNotDelete.setVisible(false);
             int customerIndex = tableViewResultArea.getSelectionModel().getSelectedIndex();
@@ -228,11 +233,7 @@ public class CustomerView {
             is also fetched in its turn by the object itself.
              */
             int customerID = data.get(customerIndex).getCustomerID();
-
-
             createCustomerView.update(customerID);
-            data = customerViewController.searchCustomer(textFieldSearchField);
-            tableViewResultArea.setItems(data);
         } );
 
         //
@@ -241,8 +242,6 @@ public class CustomerView {
             hBoxInfoBannerCanNotDelete.setVisible(false);
             //Creates a new view/window for the user to create new customers.
             createCustomerView.create();
-            data = customerViewController.searchCustomer(textFieldSearchField);
-            tableViewResultArea.setItems(data);
         });
 
         //A call to the method in the same class. Enables the tableview to be pre-filled when the user enters the customerview.
