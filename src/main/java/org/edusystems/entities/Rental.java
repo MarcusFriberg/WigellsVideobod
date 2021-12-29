@@ -37,25 +37,16 @@ public class Rental {
     private Customer customer;
 
     @Column(name = "return_date")
-    private Timestamp returnDate;
+    private Date returnDate;
 
-    @Column(name = "staff_id")
-    private Short staffId;
+    @ManyToOne
+    @JoinColumn(name = "staff_id")
+    private Staff staff;
 
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-
-
     //Constructor
-    public Rental(Date rental_date, Inventory inventoryItem, Customer customer, Timestamp return_date, Short staff_id) {
-        this.rentalDate = rental_date;
-        this.inventoryItem = inventoryItem;
-        this.customer = customer;
-        this.returnDate = return_date;
-        this.staffId = staff_id;
-    }
-
     public Rental() {
     }
 
@@ -63,11 +54,11 @@ public class Rental {
     public void setRentalDate(Date rental_date) {
         this.rentalDate = rental_date;
     }
-    public void setReturnDate(Timestamp return_date) {
+    public void setReturnDate(Date return_date) {
         this.returnDate = return_date;
     }
-    public void setStaffId(Short staff_id) {
-        this.staffId = staff_id;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
     public void setInventoryItem(Inventory inventoryItem) {
         this.inventoryItem = inventoryItem;
@@ -89,22 +80,23 @@ public class Rental {
     public Customer getCustomer() {
         return customer;
     }
-    public Timestamp getReturnDate() {
+    public Date getReturnDate() {
         return returnDate;
     }
-    public Short getStaffId() {
-        return staffId;
+    public Staff getStaff() {
+        return staff;
     }
     public Timestamp getLastUpdate() {
         return lastUpdate;
     }
-
     public String getCustomerName() {
         return customer.getFirstName() + " " + customer.getLastName();
     }
-
     public String getFilmTitle() {
         return inventoryItem.getInventoryFilm().getTitle();
+    }
+    public String getStaffName() {
+        return staff.getFirstName() + " " + staff.getLastName();
     }
 
 }
