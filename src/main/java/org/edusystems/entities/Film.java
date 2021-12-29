@@ -47,20 +47,10 @@ public class Film {
     private double rentalRate;
 
     @Column(name = "length")
-    private int length;
+    private short length;
 
     @Column(name = "replacement_cost")
     private double replacementCost;
-
-    //@Enumerated(EnumType.STRING)
-    //private Rating rating;
-
-    //public enum Rating { G, PG, PG-13, R, NC-17 }
-    //@Column(name = "rating")
-    //private enum rating{'G' = ("G"), };
-
-    //@Column(name = "special_features")
-    //Detta är ett set
 
     @Column(name = "last_update")
     private Timestamp lastUpdate;
@@ -91,7 +81,7 @@ public class Film {
         this.rentalRate = rentalRate;
     }
 
-    public void setLength(int length) {
+    public void setLength(short length) {
         this.length = length;
     }
 
@@ -132,7 +122,7 @@ public class Film {
         return rentalRate;
     }
 
-    public int getLength() {
+    public short getLength() {
         return length;
     }
 
