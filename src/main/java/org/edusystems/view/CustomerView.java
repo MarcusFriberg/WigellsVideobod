@@ -65,6 +65,14 @@ public class CustomerView {
         customerViewController = new CustomerViewController(this, mainView.getViewController());
     }
 
+    /*
+     * Method createGraphics
+     * Graphics for customerView.
+     * @params: customerID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
     public void createGraphics() {
         //Setting graphics for components created earlier. Adding children to Hbox/vbox.
         textFieldSearchField.setPromptText("Search...");
@@ -151,7 +159,6 @@ public class CustomerView {
         graphicsCreated = true;
     }
 
-
     /*
      * Method getContent
      * A method to return content of the HomeView to the caller.
@@ -213,8 +220,6 @@ public class CustomerView {
             tableViewResultArea.setItems(data);
         });
 
-
-        //
         bUpdate.setOnAction(event -> {
             hBoxInfoBannerCanNotDelete.setVisible(false);
             int customerIndex = tableViewResultArea.getSelectionModel().getSelectedIndex();

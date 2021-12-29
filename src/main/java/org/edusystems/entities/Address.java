@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 /*
  * Class Address.
- * Class that can be used to create address-objects from. With entites from Hibernate.
+ * Class that can be used to create address-objects from. With entities from Hibernate.
  * @author: Linda Djurström
  * @author: linda.djurstrom@edu.edugrade.se
  * @version: 1.0.
@@ -76,6 +76,10 @@ public class Address {
     }
 
     //Getters
+
+    public Short getAddress_id() {
+        return address_id;
+    }
     public String getAddress() {
         return address;
     }
