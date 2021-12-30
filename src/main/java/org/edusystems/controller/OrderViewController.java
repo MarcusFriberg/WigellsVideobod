@@ -149,4 +149,8 @@ public class OrderViewController {
         }
     }
 
+    // Getters
+    public ViewController getViewController() {
+        return viewController;
+    }
 }

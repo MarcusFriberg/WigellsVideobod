@@ -66,6 +66,9 @@ public class Rental {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+    public void setLastUpdate(Timestamp lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
     //Getters
     public Short getRentalId() {

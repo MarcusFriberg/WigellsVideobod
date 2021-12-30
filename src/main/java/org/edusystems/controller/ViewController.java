@@ -51,4 +51,7 @@ public class ViewController {
     public String getUserLoggedInFullName() {
         return userLoggedIn.getFirstName() + " " + userLoggedIn.getLastName();
     }
+    public Staff getUserLoggedIn() {
+        return userLoggedIn;
+    }
 }
