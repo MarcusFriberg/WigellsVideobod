@@ -112,6 +112,10 @@ public class Customer {
         return lastUpdate;
     }
 
+    public String getCustomerInfo() {
+        return "Id: " + customerId + ", Name: " + firstName + " " + lastName;
+    }
+
     public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }

@@ -44,7 +44,7 @@ public class OrderViewController {
         // by this method as a FXCollections.observableArrayList
         List<Rental> rentalList = null;
 
-        // Try get a transaction and start it, sending a TypedQuery fetching all rows in the rental table as Rental-entity's.
+        // Try to get a transaction and start it, sending a TypedQuery fetching all rows in the rental table as Rental-entity's.
         // Store it in rentalList and commit the transaction.
         try {
             transaction = entityManager.getTransaction();
@@ -54,7 +54,7 @@ public class OrderViewController {
             transaction.commit();
 
         } catch (Exception e) {
-            // If there was an arror and the transaction is not null, rollback the transaction.
+            // If there was an error and the transaction is not null, rollback the transaction.
             // Then printStackTrace for the exception.
             if(transaction != null) {
                 transaction.rollback();

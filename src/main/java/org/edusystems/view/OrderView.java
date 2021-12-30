@@ -66,7 +66,7 @@ public class OrderView {
             addOrderLabel.setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 8");
         });
         addOrderVBox.setOnMouseClicked(event -> {
-            // Code to open window to add new order
+            CreateOrderView createOrderView = new CreateOrderView(this, orderViewController);
         });
         // Search
         Label filterLabel = new Label("Filter search results: ");
