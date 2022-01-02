@@ -3,6 +3,7 @@ package org.edusystems.entities;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "inventory")
@@ -44,15 +45,12 @@ public class Inventory {
     public int getInventoryId() {
         return inventoryId;
     }
-
     public Timestamp getLastUpdate() {
         return lastUpdate;
     }
-
     public Film getInventoryFilm() {
         return inventoryFilm;
     }
-
     public Store getInventoryStore() {
         return inventoryStore;
     }
@@ -77,4 +75,13 @@ public class Inventory {
         return inventoryFilm.getDescription();
     }
 
+    public String getInventoryFilmTitle() {
+        return inventoryFilm.getTitle();
+    }
+    public String getInventoryFilmReleaseYear() {
+        Date date = inventoryFilm.getReleaseYear();
+        String dateString = date.toString();
+        String dateToReturn = dateString.substring(0,4);
+        return dateToReturn;
+    }
 }

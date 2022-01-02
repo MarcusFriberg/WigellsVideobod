@@ -1,14 +1,11 @@
 package org.edusystems.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
-import org.edusystems.entities.Address;
-import org.edusystems.entities.City;
-import org.edusystems.entities.Country;
-import org.edusystems.entities.Customer;
+import org.edusystems.entities.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +19,29 @@ import static org.edusystems.Main.ENTITY_MANAGER_FACTORY;
  * @version: 1.0.
  */
 public class CreateCustomerViewController {
+    public static EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("hibernate");
     //Constructor
     CustomerViewController customerViewController;
     public CreateCustomerViewController(CustomerViewController customerViewController) {
         this.customerViewController = customerViewController;
     }
 
+    public void create(TextField textFieldStoreID, TextField textFieldFirstName, TextField textFieldLastName, TextField textFieldEmail,
+                       TextField textFieldAddress, TextField textFieldAddress2, TextField textFieldPostalCode,
+                       TextField textFieldDistrict, TextField textFieldCity, TextField textFieldCountry, TextField textFieldPhone) {
+
+        Short countryID = getCountryID(textFieldCountry);
+        Short cityID = getCityID(textFieldCity, countryID);
+        addAddress(textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone, cityID);
+        int addressID = searchAddressID();
+        addCustomer(textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID);
+    }
+
     /*
      * Method searchCountryID
      * Method that searches in the database and fetches the objects that relates to the user's entry in the countryTextfield.
-     * Params: TextField countryName.
-     * Returns: countryID if found, else -1.
+     * @Params: TextField countryName.
+     * @Returns: countryID if found, else -1.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -70,7 +79,7 @@ public class CreateCustomerViewController {
     /*
      * Method createCountry.
      * Method that creates a country
-     * Params: TextField countryName.
+     * @Params: TextField countryName.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -105,8 +114,8 @@ public class CreateCustomerViewController {
      * Method that searches in the database and fetches the objects that relates to the user's entry in the cityTextField, if it
      * exists. Taking into account if the city exists in the country the users has specified (if not, it's not a hit). Multiple
      * countries can have cities with the same name.
-     * Params: TextField cityName, countryID
-     * Returns: cityID if found, else -1.
+     * @Params: TextField cityName, countryID
+     * @Returns: cityID if found, else -1.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -145,7 +154,7 @@ public class CreateCustomerViewController {
     /*
      * Method createCity.
      * Method that creates a city.
-     * Params: TextField cityName.
+     * @Params: TextField cityName, countryID.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -179,7 +188,7 @@ public class CreateCustomerViewController {
     /*
      * Method addAddress
      * Method that creates an address.
-     * Params: TextFieldAddress, TextFieldAddress2, TextFieldPostalCode, TextFieldDistrict, TextFieldPhone, CityID.
+     * @Params: TextFieldAddress, TextFieldAddress2, TextFieldPostalCode, TextFieldDistrict, TextFieldPhone, CityID.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -200,7 +209,8 @@ public class CreateCustomerViewController {
             address.setPhone(textFieldPhone.getText());
             //Set value to the CityID from the value sent in to the method.
             address.setCity_id(cityID);
-            address.setLast_update(new Timestamp(System.currentTimeMillis()));
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            address.setLast_update(timestamp);
             //Adds the address-object to the database.
             entityManager.persist(address);
             transaction.commit();
@@ -216,8 +226,8 @@ public class CreateCustomerViewController {
 
     /*
      * Method searchAddressID.
-     * Method that returns addressID from the last_updated address in database.
-     * Returns: addressID.
+     * @Method that returns addressID from the last_updated address in database.
+     * @Returns: addressID.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -249,8 +259,8 @@ public class CreateCustomerViewController {
 
     /*
      * Method addCustomer
-     * Method that creates a customer.
-     * Params: textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID.
+     * @Method that creates a customer.
+     * @Params: textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail, addressID.
      * @author: Linda Djurström
      * @author: linda.djurstrom@edu.edugrade.se
      * @version: 1.0
@@ -272,10 +282,274 @@ public class CreateCustomerViewController {
             //Customer is set as active.
             customer.setActive(1);
             //Set createDate and lastUpdate.
-            customer.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            customer.setLastUpdate((new Timestamp(System.currentTimeMillis())));
-            //Sends the customerobject to the database.
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            customer.setCreateDate(timestamp);
+            customer.setLastUpdate(timestamp);
+            //Sends the customerObject to the database.
             entityManager.persist(customer);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    /*
+     * Method getCustomer
+     * Method that get a customerObject from database, with customerID.
+     * @Params: int customerID.
+     * @Returns: customer.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public Customer getCustomer(int customerID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Customer customer = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+                    customer = entityManager.getReference(Customer.class, Short.parseShort(String.valueOf(customerID)));
+            } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return customer;
+    }
+
+    /*
+     * Method getAddress
+     * Method that get a address-Object from database, with addressID.
+     * @Params: Short addressID.
+     * @Returns: Address.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public static Address getAddress(Short addressID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Address address = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            address = entityManager.getReference(Address.class, addressID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return address;
+    }
+
+    /*
+     * Method getCity
+     * Method that get a city-Object from database, with cityID.
+     * @Params: Short cityID.
+     * @Returns: Address.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public static City getCity(Short cityID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        City city = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            city = entityManager.getReference(City.class, cityID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return city;
+    }
+
+    /*
+     * Method getCountry
+     * Method that get a country-Object from database, with countryID.
+     * @Params: Short countryID.
+     * @Returns: Address.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public static Country getCountry(Short countryID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        Country country = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            country = entityManager.getReference(Country.class, countryID);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return country;
+    }
+
+    /*
+     * Method update
+     * Method that uses other methods to update country, city, customer and address with information from objects and textFields.
+     * @Params: Customer-object, address-object, textFields.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    public void update(Customer customer, Address address,
+                               TextField textFieldStoreID, TextField textFieldFirstName, TextField textFieldLastName,
+                               TextField textFieldEmail, TextField textFieldAddress, TextField textFieldAddress2,
+                               TextField textFieldPostalCode, TextField textFieldDistrict, TextField textFieldCity,
+                               TextField textFieldCountry, TextField textFieldPhone) {
+        Short cityID;
+        Short countryID;
+        countryID = getCountryID(textFieldCountry);
+        cityID = getCityID(textFieldCity, countryID);
+        updateCity(customer, cityID);
+        updateAddress(address, textFieldAddress, textFieldAddress2, textFieldPostalCode, textFieldDistrict, textFieldPhone);
+        updateCustomer(customer, textFieldStoreID, textFieldFirstName, textFieldLastName, textFieldEmail);
+    }
+
+    /*
+     * Method getCountryID
+     * Method that uses other methods to get countryID or create a new country, and get CountryID.
+     * @Params: textFieldCountry.
+     * @Returns: Short countryID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    private Short getCountryID(TextField textFieldCountry) {
+        Short countryID = null;
+        countryID = searchCountryID(textFieldCountry);
+        if(countryID < 0) {
+            createCountry(textFieldCountry);
+            countryID = searchCountryID(textFieldCountry);
+        }
+        return countryID;
+    }
+
+    /*
+     * Method getCityID
+     * Method that uses other methods to get cityID or create a new city, and get cityID.
+     * @Params: TextFieldCity, CountryID
+     * @Returns: Short cityID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    private Short getCityID(TextField textFieldCity, Short countryID) {
+        Short cityID = null;
+        cityID = searchCityID(textFieldCity, countryID);
+        if(cityID < 0) {
+            createCity(textFieldCity, countryID);
+            cityID = searchCityID(textFieldCity, countryID);
+        }
+        return cityID;
+    }
+
+    /*
+     * Method updateCity
+     * Method that updates City and countryID in city-table in database. On customerID.
+     * @Params: Customer-object, Short CityID.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    private void updateCity(Customer customer, Short cityID) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Query query = entityManager.createNativeQuery("UPDATE (((customer INNER JOIN address ON customer.address_id = address.address_id) INNER JOIN city " +
+                    "ON address.city_id = city.city_id) INNER JOIN country ON city.country_id = country.country_id) SET address.city_id = " + "'" + cityID + "'" +
+                    " WHERE customer_id = " + customer.getCustomerId());
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    /*
+     * Method updateAddress
+     * Method that updates Address in database.
+     * @Params: Address-object, textFields for address.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    private void updateAddress(Address address,TextField textFieldAddress, TextField textFieldAddress2, TextField textFieldPostalCode,
+                               TextField textFieldDistrict, TextField textFieldPhone) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Query query = entityManager.createNativeQuery("UPDATE address SET address = " + "'" + textFieldAddress.getText() + "'" +
+                    ", address2 = " + "'" + textFieldAddress2.getText() + "'" + ", postal_code = " + "'" + textFieldPostalCode.getText() + "'" +
+                    ", district = " + "'" + textFieldDistrict.getText() + "'"  + ", phone = " + "'" + textFieldPhone.getText() + "'"
+                    + " WHERE address_id = " + address.getAddress_id());
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    /*
+     * Method updateCustomer
+     * Method that updates Customer in database.
+     * @Params: Customer-object and textfields.
+     * @author: Linda Djurström
+     * @author: linda.djurstrom@edu.edugrade.se
+     * @version: 1.0
+     */
+    private void updateCustomer(Customer customer,TextField textFieldStoreID, TextField textFieldFirstName, TextField textFieldLastName,
+                                TextField textFieldEmail) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            Query query = entityManager.createNativeQuery("UPDATE customer SET first_name = " + "'" + textFieldFirstName.getText() + "'" +
+                    ", last_name = " + "'" + textFieldLastName.getText() + "'" + ", email = " + "'" + textFieldEmail.getText() + "'" + " WHERE customer_id = " + customer.getCustomerId());
+            query.executeUpdate();
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
