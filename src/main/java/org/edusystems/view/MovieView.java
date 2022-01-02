@@ -10,8 +10,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.edusystems.controller.MovieViewController;
@@ -61,31 +59,6 @@ public class MovieView {
         Label pageTitle = new Label("Movie inventory");
         pageTitle.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 18");
 
-        // Add buttons to add a movie to the inventory
-        Label addMovieLabel = new Label("Add movie");
-        addMovieLabel.setPadding(new Insets(-5,0,0,0));
-        addMovieLabel.setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 8;");
-        //TODO: Make these images smaller to fit better, if I make it clickable
-        Image addMovieImage = new Image("/appGraphics/movies-add.png");
-        Image addMovieMouseOverImage = new Image("/appGraphics/movies-add-mouseover.png");
-        ImageView addMovieImageView = new ImageView(addMovieImage);
-        VBox addMovieVBox = new VBox();
-        addMovieVBox.getChildren().addAll(addMovieImageView, addMovieLabel);
-        addMovieVBox.setSpacing(10);
-
-        // Button - Add Order Events
-        addMovieVBox.setOnMouseEntered(event -> {
-            addMovieImageView.setImage(addMovieMouseOverImage);
-            addMovieLabel.setStyle("-fx-text-fill: #DC77FA; -fx-font-size: 8");
-            addMovieVBox.setStyle("-fx-cursor: hand");
-        });
-        addMovieVBox.setOnMouseExited(event -> {
-            addMovieImageView.setImage(addMovieImage);
-            addMovieLabel.setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 8");
-        });
-        addMovieVBox.setOnMouseClicked(event -> {
-            // TODO: Might remove this option
-        });
         // Search area
         Label filterLabel = new Label("Filter search results: ");
         filterLabel.setPrefSize(650,20);
@@ -110,7 +83,7 @@ public class MovieView {
 
         // HBox to hold buttons above the table
         HBox topButtonRow = new HBox();
-        topButtonRow.getChildren().addAll(addMovieVBox, filterLabel,filterTextField);
+        topButtonRow.getChildren().addAll(filterLabel,filterTextField);
         topButtonRow.setPadding(new Insets(20, 0, 10, 0));
 
         // Table columns
