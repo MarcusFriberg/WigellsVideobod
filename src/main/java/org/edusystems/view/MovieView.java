@@ -84,7 +84,7 @@ public class MovieView {
             addMovieLabel.setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 8");
         });
         addMovieVBox.setOnMouseClicked(event -> {
-            // Code to open window to add new order
+            // TODO: Might remove this option
         });
         // Search area
         Label filterLabel = new Label("Filter search results: ");
