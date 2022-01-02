@@ -19,7 +19,7 @@ public class FilmCategory {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int filmId;
 
-        @Column(name = "category_id")
+        @Column (name = "category_id")
         private int categoryId;
 
         @Column(name = "last_update")

@@ -21,7 +21,7 @@ public class FilmText {
         @Column(name = "title")
         private int title;
 
-        @Column(name = "last_update")
+        @Column(name = "description")
         private String description;
     // Empty constructor
     public FilmText() {

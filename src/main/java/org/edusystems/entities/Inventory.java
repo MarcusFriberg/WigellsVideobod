@@ -54,6 +54,27 @@ public class Inventory {
     public Store getInventoryStore() {
         return inventoryStore;
     }
+
+    public String getFilmTitle() {
+        return inventoryFilm.getTitle();
+    }
+
+    public int getStoreId() {
+        return inventoryStore.getStoreId();
+    }
+
+    public Date getReleaseYear() {
+        return inventoryFilm.getReleaseYear();
+    }
+
+    public short getLength() {
+        return inventoryFilm.getLength();
+    }
+
+    public String getDescription() {
+        return inventoryFilm.getDescription();
+    }
+
     public String getInventoryFilmTitle() {
         return inventoryFilm.getTitle();
     }
