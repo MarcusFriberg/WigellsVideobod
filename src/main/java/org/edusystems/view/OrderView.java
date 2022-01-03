@@ -135,6 +135,12 @@ public class OrderView {
         // Button - deleteRental
         Button deleteRental = new Button("Delete selected rental");
         deleteRental.setStyle("-fx-background-color: #DD3333");
+        deleteRental.setOnMouseEntered(event -> {
+            deleteRental.setStyle("-fx-background-color: #FF3333; -fx-cursor: hand");
+        });
+        deleteRental.setOnMouseExited(event -> {
+            deleteRental.setStyle("-fx-background-color: #DD3333");
+        });
         deleteRental.setOnAction(event -> {
             // Put the selected rental-entity into selectedRentalToDelete
             Rental selectedRentalToDelete = rentalsTable.getSelectionModel().getSelectedItem();
@@ -147,6 +153,12 @@ public class OrderView {
         // Button - markAsReturnedRental
         Button markAsReturnedRental = new Button("Return selected rental");
         markAsReturnedRental.setStyle("-fx-background-color: #33DD33");
+        markAsReturnedRental.setOnMouseEntered(event -> {
+            markAsReturnedRental.setStyle("-fx-background-color: #33FF33; -fx-cursor: hand");
+        });
+        markAsReturnedRental.setOnMouseExited(event -> {
+            markAsReturnedRental.setStyle("-fx-background-color: #33DD33");
+        });
         markAsReturnedRental.setOnAction(event -> {
             // Put the selected rental-entity into selectedRentalToReturn
             Rental selectedRentalToReturn = rentalsTable.getSelectionModel().getSelectedItem();
@@ -168,35 +180,7 @@ public class OrderView {
         return content;
     }
 
-    /*
-     //Function for click on delete.
-        bDelete.setOnAction(event -> {
-            //Text in hBoxInfoBannerCanNotDelete turns unvisible again.
-            hBoxInfoBannerCanNotDelete.setVisible(false);
-
-            //Grabs the index-value from the tableview-object clicked on.
-            int customerCopy = tableViewResultArea.getSelectionModel().getSelectedIndex();
-            //If there is no value choosen at info-banner shows on the screen. The label turns visible.
-            if(customerCopy < 0)
-            {
-                labelInfoBannerCanNotDelete.setText("Du måste välja en kund att radera först.");
-                hBoxInfoBannerCanNotDelete.setVisible(true);
-            }
-
-            // If there is an index, the object stored in the data-list is fetched by the customerCopy-value and the customerID
-            // is also fetched in its turn by the object itself.
-
-    int customerID = data.get(customerCopy).getCustomerID();
-    //A method-call to a function in the customerviewController. CustomerID and the hBox+ label is sent in as parameters to the function.
-            customerViewController.deleteCustomer(customerID, hBoxInfoBannerCanNotDelete, labelInfoBannerCanNotDelete);
-    //The table updates itself, and removes the deletedcustomer from the view by a method-call to the customerViewControllers function.
-    data = customerViewController.searchCustomer(textFieldSearchField);
-            tableViewResultArea.setItems(data);
-});
-
-     */
     // Getters
-
     public ObservableList<Rental> getRentalsObservableList() {
         return rentalsObservableList;
     }

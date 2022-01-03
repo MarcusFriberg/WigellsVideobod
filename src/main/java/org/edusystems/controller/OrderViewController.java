@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /*
