@@ -123,9 +123,16 @@ public class CreateOrderView {
         inventoryVBox.getChildren().addAll(inventorySearchHBox,inventoryTable);
 
         HBox bottomRow = new HBox();
+        bottomRow.setPadding(new Insets(10,10,10,10));
         bottomRow.setAlignment(Pos.BOTTOM_RIGHT);
         Button createOrderButton = new Button("Create Order");
         createOrderButton.setStyle("-fx-background-color: #33DD33");
+        createOrderButton.setOnMouseEntered(event -> {
+            createOrderButton.setStyle("-fx-background-color: #33FF33; -fx-cursor: hand");
+        });
+        createOrderButton.setOnMouseExited(event -> {
+            createOrderButton.setStyle("-fx-background-color: #33DD33");
+        });
         createOrderButton.setOnAction(event -> {
             // Put the selected customer-entity into selectedCustomer
             Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
